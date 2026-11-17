@@ -5,9 +5,65 @@ date: 2023-05-08
 categories: [Intune, Windows]
 tags: [Intune, Security]
 icon: article
-original: https://www.simsenblog.dk/2023/05/08/security-baseline-latest-as-settings-catalog/
 ---
 
-Explore using the Settings Catalog for security baseline configuration in Intune.
+Have you ever tried using the Security Baseline feature in Intune’s Endpoint Security to enhance your device’s security?
 
-This article has not been migrated to the new site yet. Until it is, the full post is on the [current SIMSENblog](https://www.simsenblog.dk/2023/05/08/security-baseline-latest-as-settings-catalog/).
+If you have, but also encountered the frustration of finding certain settings missing – so you still need to create a Configuration Profile. Here is a tip that is quit smart and also make sure you get the latest baseline.
+
+You can create your own Settings Catalog with all the baseline settings and add your own settings too.
+
+To get started, download the latest Microsoft Security Toolkit package that includes all the necessary Group Policy Objects (GPOs). Then, head over to Microsoft Intune > Devices > [**Group Policy analytics** (preview)](https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/policyAnalyticsReport)– import the policy, and **migrate** it to the Settings Catalog. This approach lets you create a comprehensive and personalized list of settings and you can add all the settings you want.
+
+[Download latest Microsoft Security Toolkit](https://www.microsoft.com/en-us/download/confirmation.aspx?id=55319)
+
+Current baselines is in the MST package for Windows client, M365 Apps and Edge:
+
+-   Windows 11 version 22H2 Security Baseline.zip
+-   Microsoft 365 Apps for Enterprise-2206-FINAL.zip
+-   Microsoft Edge v112 Security Baseline.zip
+-   Windows 10 Update Baseline.zip
+-   Windows 10 Version 1507 Security Baseline.zip
+-   Windows 10 Version 1607.zip
+-   Windows 10 Version 1809.zip
+-   Windows 10 Version 20H2.zip
+-   Windows 10 version 21H2 Security Baseline.zip
+-   Windows 10 version 22H2 Security Baseline.zip
+-   Windows 11 Security Baseline.zip
+
+Here I have now imported all Windows 11, Edge and Microsoft 365 policies to Group Policy Analytics:
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/Intune_Policies-1024x663.png)
+
+Now select the Group Policy and Click **Migrate**
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/Migrate_policy.png)
+
+Click **Select all** on this page.  
+**OBS:** Remember if there is multiple pages – you have to Click Next (up-right-corner) and again Select all on this page. Until you have them all.
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/Click_SelectAll-1024x861.png)
+
+Click Next
+
+Now you get an overview
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/overview_edge.png)
+
+Set name for the policy
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/name_policy.png)
+
+Click Next
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/scopetag.png)
+
+Set assignment if needed – else Click Next
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/assignment.png)
+
+Click Deploy
+
+![](/images/posts/security-baseline-latest-as-settings-catalog/review.png)
+
+Now you have a full setting catalog policy with latest Edge baseline.

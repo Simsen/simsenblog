@@ -62,6 +62,15 @@ Write the steps here.
   ```html
   <div class="note"><strong>Good to know</strong>Text of the callout.</div>
   ```
+- Step-by-step gallery (one image at a time, with ‹ ›, counter, arrow keys and swipe). Put the images in
+  `public/images/posts/<post-file-name>/` and write one `<figure>` per image. Keep the lines together, with
+  no blank lines inside the `<div>`:
+  ```html
+  <div class="post-gallery" aria-label="Enrol the Mac">
+  <figure><img src="/images/posts/my-post/step-01.png" alt="Step 1 - Click Continue" /><figcaption>Step 1 - Click Continue</figcaption></figure>
+  <figure><img src="/images/posts/my-post/step-02.png" alt="Step 2 - Click Agree" /><figcaption>Step 2 - Click Agree</figcaption></figure>
+  </div>
+  ```
 
 ## Drafts
 

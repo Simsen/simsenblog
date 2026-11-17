@@ -32,7 +32,7 @@ const blog = defineCollection({
     /** Override the generated URL, e.g. "/2021/10/04/old-wordpress-slug/". */
     permalink: z
       .string()
-      .regex(/^\/[a-z0-9\-/]*\/$/, 'permalink must start and end with "/" and use lowercase letters, numbers and dashes')
+      .regex(/^\/[a-z0-9\-_/]*\/$/, 'permalink must start and end with "/" and use lowercase letters, numbers, dashes and underscores')
       .optional(),
     /** Optional project banner and action buttons at the top/bottom of the article. */
     project: z

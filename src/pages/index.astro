@@ -78,10 +78,12 @@ const posts = await getPosts();
 
   function filterPosts() {
     const query = search.value.trim().toLowerCase();
+    // Every word must appear somewhere, in any order: "silent bitlocker" finds "BitLocker silent encryption".
+    const words = query.split(/\s+/).filter(Boolean);
     let shown = 0;
     cards.forEach((card) => {
       const inCategory = category === 'all' || card.dataset.categories!.split(' ').includes(category);
-      const matches = inCategory && card.dataset.search!.includes(query);
+      const matches = inCategory && words.every((w) => card.dataset.search!.includes(w));
       card.hidden = !matches;
       if (matches) shown++;
     });
@@ -118,5 +120,12 @@ const posts = await getPosts();
     });
   });
 
-  expandPost(cards[0]);
+  // Links like /?topic=intune or /?q=bitlocker (used by the 404 page for old WordPress category and tag URLs).
+  const params = new URLSearchParams(location.search);
+  const topic = params.get('topic')?.toLowerCase();
+  const preset = filters.find((f) => f.dataset.category === topic);
+  if (params.get('q')) search.value = params.get('q')!;
+  if (preset) preset.click();
+  else if (search.value) filterPosts();
+  else expandPost(cards[0]);
 </script>

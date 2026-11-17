@@ -127,6 +127,9 @@ const primaryLinks = project?.links ?? [];
 </BaseLayout>
 
 <script>
+  import { initGalleries } from '../scripts/gallery';
+  initGalleries();
+
   const bar = document.querySelector<HTMLElement>('.reading-progress');
   function updateProgress() {
     if (!bar) return;

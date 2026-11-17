@@ -19,27 +19,87 @@ project:
       primary: true
     - label: View on GitHub
       url: https://github.com/Simsen/AutopilotQR
-original: https://www.simsenblog.dk/2026/10/18/introducing-autopilotqr-scan-associate-deploy/
 ---
 
-Windows Autopilot Device Preparation can display a QR code during setup. AutopilotQR turns that code into a simpler device association workflow.
+**Making Windows Autopilot Device Association easier with a free, open-source QR scanner.**
+
+Microsoft recently introduced Device Association for Windows Autopilot Device Preparation, bringing some interesting improvements to how we prepare and enroll Windows devices.
+
+One of the new capabilities is the option to generate a QR code directly from Windows OOBE.
+
+But that got me thinking…
+
+**Microsoft gave us the QR code. So why not build the scanner?** 😎
 
 ## Where the idea came from
 
-A customer project sparked the idea: make device association accessible through a browser, without maintaining a separate Power Apps solution.
+While working on a customer project, I came across a clever Power Apps solution that made it possible to work with the new Device Association functionality.
 
-> Microsoft gave us the QR code. So why not build the scanner?
+I really liked the idea.
 
-## What is device association?
+But I also started thinking about how we could make something similar available to everyone working with Microsoft Intune.
 
-Device association establishes a relationship between a Windows device and your Microsoft Entra tenant before enrollment. AutopilotQR provides a browser-based way to complete that association.
+Something that wouldn’t require deploying a Power App, creating a separate application registration, or maintaining additional infrastructure.
 
-## Getting started
+Just open a website, sign in with your Microsoft Entra ID account, scan the QR code, and associate the device with your tenant.
 
-1. In Windows OOBE, press the Windows key five times.
-2. Select the QR-code option.
-3. Open [AutopilotQR.app](https://autopilotqr.app/) on your phone and sign in.
-4. Scan the code and choose your Device Preparation policy.
-5. Associate the device with your tenant.
+So I decided to build **AutopilotQR**.
 
-<div class="note"><strong>In your browser</strong>AutopilotQR communicates directly with Microsoft Graph using delegated permissions, without backend customer-data storage.</div>
+A free, open-source web application designed to simplify Windows Autopilot Device Association.
+
+**Scan. Associate. Deploy.**
+
+[https://AutopilotQR.app](https://AutopilotQR.app)
+
+[https://github.com/Simsen/AutopilotQR](https://github.com/Simsen/AutopilotQR)
+
+---
+
+## What is Windows Autopilot Device Association?
+
+Before diving into AutopilotQR, it’s worth explaining the new Device Association functionality.
+
+With Windows Autopilot Device Preparation, Microsoft introduced a different approach to preparing Windows devices compared to traditional Windows Autopilot.
+
+Now, Device Association takes this a step further.
+
+It allows organizations to establish a trusted relationship between a physical Windows device and their Microsoft Entra tenant before enrollment.
+
+Unlike traditional Autopilot hardware hash registration, Device Association uses a TPM-backed identity and establishes tenant affinity in the device’s UEFI firmware.
+
+This introduces several interesting possibilities:
+
+-   Identify corporate-owned devices before enrollment.
+-   Support environments that block personal device enrollment.
+-   Apply Device Preparation policies directly to associated devices.
+-   Enable additional OOBE customization capabilities.
+-   Support device naming during preparation.
+
+And importantly, Microsoft introduced a way to generate the device association information directly from Windows OOBE.
+
+There are currently two options available from the Autopilot menu:
+
+**Export device information:** Export a DeviceLink CSV file, typically using a USB drive, and import it through the Microsoft Intune admin center.
+
+**Scan QR code:** Generate a QR code containing the device association information, which can be processed by a custom application.
+
+That second option is where AutopilotQR comes in.
+
+Microsoft documents the QR option specifically for custom applications that use Microsoft Graph to pre-associate the device. 
+
+## Getting Started with AutopilotQR
+
+Using AutopilotQR is pretty straightforward:
+
+1.  Start Windows OOBE and press the Windows key five times.
+2.  Select **Scan QR code**.
+3.  Open **https://autopilotqr.app/** on your phone.
+4.  Sign in with your Microsoft Entra ID account.
+5.  Scan the QR code and select your Device Preparation policy.
+6.  Associate the device with your Intune tenant.
+
+![](/images/posts/introducing-autopilotqr-scan-associate-deploy/screenshot_autopilotQR-930x1024.png)
+
+That’s it! No CSV exports, USB drives, or PowerShell scripts.
+
+AutopilotQR runs entirely in your browser and communicates directly with Microsoft Graph using delegated permissions. No backend infrastructure or customer data storage is required.

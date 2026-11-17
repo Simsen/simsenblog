@@ -16,7 +16,7 @@ const groups: { id: string; icon: string; title: string; links: Link[] }[] = [
     links: [
       {
         name: 'CMTrace',
-        url: `${SITE.legacy}/cmtrace.exe`,
+        url: '/cmtrace.exe',
         price: 'Free',
         text: 'The log reader I use for troubleshooting on any client. Hosted here for a quick download.',
       },
@@ -117,7 +117,7 @@ const groups: { id: string; icon: string; title: string; links: Link[] }[] = [
   },
 ];
 
-const host = (url: string) => new URL(url).hostname.replace(/^www\./, '');
+const host = (url: string) => new URL(url, 'https://www.simsenblog.dk').hostname.replace(/^www\./, '');
 ---
 
 <BaseLayout
