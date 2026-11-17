@@ -1,0 +1,46 @@
+---
+import { ICONS } from '../lib/site';
+import { formatDate, fullTitle, postPath, topics, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  index: number;
+}
+const { post, index } = Astro.props;
+const { description, date, categories, icon, featured, draft } = post.data;
+const title = fullTitle(post);
+const glyph = ICONS[icon];
+const detailId = `post-detail-${index}`;
+const href = postPath(post);
+---
+
+<article
+  class="post expanding-post"
+  data-categories={categories.map((c) => c.toLowerCase()).join(' ')}
+  data-search={[title, description, topics(post), categories.join(' ')].join(' ').toLowerCase()}
+>
+  <div class="post-row">
+    <span class="small-post-icon" aria-hidden="true">{glyph}</span>
+    <span class="post-heading">
+      <a class="post-title" href={href}>{title}</a>
+      <span class="meta">
+        {featured && <span class="tag">FEATURED</span>}
+        {draft && <span class="draft-badge">DRAFT</span>}
+        <span>{formatDate(date)}</span>
+        <span>{topics(post)}</span>
+      </span>
+    </span>
+    <button class="post-toggle" type="button" aria-expanded="false" aria-controls={detailId} aria-label={`Preview ${title}`}>
+      <span class="expand-indicator" aria-hidden="true">+</span>
+    </button>
+  </div>
+  <div class="post-reveal" id={detailId}>
+    <div class="post-reveal-inner">
+      <div class="post-description">
+        <p>{description}</p>
+        <a class="read" href={href}>Read article →</a>
+      </div>
+      <div class="large-post-icon" aria-hidden="true"><span>{glyph}</span></div>
+    </div>
+  </div>
+</article>

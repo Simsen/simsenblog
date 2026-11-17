@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import EndpointGame from '../components/EndpointGame.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import PostRow from '../components/PostRow.astro';
+import { CATEGORIES, SITE } from '../lib/site';
+import { getPosts } from '../lib/posts';
+
+const posts = await getPosts();
+---
+
+<BaseLayout active="blog">
+  <section class="hero hero-compact">
+    <h1 class="sr-only">SIMSENblog — {SITE.tagline}</h1>
+    <EndpointGame />
+    <!-- Phones/tablets only: the sidebar author card moves up here. -->
+    <div class="mobile-author">
+      <div class="mobile-author-id">
+        <img class="author-photo" src="/images/simon-portrait.png" alt={SITE.author} width="44" height="51" tabindex="0" />
+        <strong>Simon <span class="nowrap">Hartmann Eriksen</span></strong>
+      </div>
+      <img class="mobile-author-mvp" src="/images/mvp-logo-white.png" alt="Microsoft Most Valuable Professional" width="99" height="34" />
+      <SocialLinks class="mobile-socials" />
+    </div>
+  </section>
+
+  <div class="home-layout">
+  <section class="home-posts" id="articles">
+    <h2 class="sr-only">Articles</h2>
+    <div class="toolbar">
+      <div class="filters" role="group" aria-label="Filter articles">
+        <button class="filter" aria-pressed="true" data-category="all">All posts</button>
+        {CATEGORIES.map((c) => <button class="filter" aria-pressed="false" data-category={c.toLowerCase()}>{c}</button>)}
+      </div>
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+        <input type="search" id="search" aria-label="Search articles" placeholder="Search articles…" />
+      </label>
+    </div>
+    <div class="interactive-posts">
+      {posts.map((post, i) => <PostRow post={post} index={i} />)}
+    </div>
+    <p class="empty" id="empty" hidden>No articles match. Try another topic or search.</p>
+    <span class="result-status" id="resultStatus" role="status"></span>
+  </section>
+  <Sidebar show="tools" hideAuthorOnMobile />
+  </div>
+</BaseLayout>
+
+<script>
+  // Topic filters + search over the rendered list.
+  const filters = [...document.querySelectorAll<HTMLButtonElement>('.filter')];
+  const search = document.querySelector<HTMLInputElement>('#search')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('.expanding-post')];
+  const empty = document.querySelector<HTMLElement>('#empty')!;
+  const status = document.querySelector<HTMLElement>('#resultStatus')!;
+  let category = 'all';
+
+  // Only one preview is expanded at a time.
+  function expandPost(card: HTMLElement | undefined) {
+    cards.forEach((item) => {
+      const open = item === card;
+      item.classList.toggle('is-expanded', open);
+      item.querySelector('.post-toggle')!.setAttribute('aria-expanded', String(open));
+      (item.querySelector('.post-reveal') as HTMLElement).inert = !open;
+    });
+  }
+
+  let hoverTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // If the expanded preview was filtered away, open the first visible one.
+  function reconcilePreview() {
+    clearTimeout(hoverTimer);
+    const visible = cards.filter((c) => !c.hidden);
+    if (!visible.some((c) => c.classList.contains('is-expanded'))) expandPost(visible[0]);
+  }
+
+  function filterPosts() {
+    const query = search.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((card) => {
+      const inCategory = category === 'all' || card.dataset.categories!.split(' ').includes(category);
+      const matches = inCategory && card.dataset.search!.includes(query);
+      card.hidden = !matches;
+      if (matches) shown++;
+    });
+    empty.hidden = shown !== 0;
+    status.textContent = query || category !== 'all' ? `${shown} matching article${shown === 1 ? '' : 's'}.` : '';
+    reconcilePreview();
+  }
+
+  filters.forEach((button) =>
+    button.addEventListener('click', () => {
+      category = button.dataset.category!;
+      filters.forEach((other) => other.setAttribute('aria-pressed', String(other === button)));
+      filterPosts();
+    }),
+  );
+  search.addEventListener('input', filterPosts);
+
+  cards.forEach((card) => {
+    // Mouse hover expands after a short 40 ms delay; touch and keyboard use tap / focus.
+    card.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(() => expandPost(card), 40);
+    });
+    card.addEventListener('pointerleave', () => clearTimeout(hoverTimer));
+    // The headline is a link to the article; the rest of the row (and the + button) opens the preview.
+    card.querySelector('.post-row')!.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a')) return;
+      expandPost(card);
+    });
+    card.addEventListener('focusin', () => {
+      clearTimeout(hoverTimer);
+      expandPost(card);
+    });
+  });
+
+  expandPost(cards[0]);
+</script>

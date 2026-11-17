@@ -1,0 +1,154 @@
+---
+/**
+ * Article pages. Every post is generated at /YYYY/MM/DD/<file-name>/ (or its `permalink`),
+ * matching the WordPress URL scheme so existing links keep working.
+ */
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EndpointGame from '../components/EndpointGame.astro';
+import { ICONS, SITE } from '../lib/site';
+import { formatDate, fullTitle, getPosts, postPath, type Post } from '../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const seen = new Map<string, string>();
+  return posts.map((post, i) => {
+    const path = postPath(post);
+    if (seen.has(path)) {
+      throw new Error(`Two posts share the URL ${path}: "${seen.get(path)}" and "${post.id}". Change a file name or permalink.`);
+    }
+    seen.set(path, post.id);
+    // Keep reading: the next older post, or the newest one if this is the oldest.
+    const next = posts[i + 1] ?? (posts.length > 1 ? posts[0] : undefined);
+    return { params: { slug: path.slice(1, -1) }, props: { post, next } };
+  });
+}
+
+interface Props {
+  post: Post;
+  next?: Post;
+}
+
+const { post, next } = Astro.props;
+const { title, subtitle, description, lead, date, categories, tags, project, original } = post.data;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+const primaryLinks = project?.links ?? [];
+---
+
+<BaseLayout title={fullTitle(post)} description={description} active="blog" type="article">
+  <div slot="before" class="reading-progress" aria-hidden="true"></div>
+
+  <section class="hero hero-compact">
+    <EndpointGame />
+  </section>
+
+  <div class="article-layout">
+    <div class="article-main">
+      <header class="article-heading">
+        <div class="meta">
+          {(tags ?? categories).map((c) => <span class="tag">{c.toUpperCase()}</span>)}
+          <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date, 'long')}</time>
+        </div>
+        <h1>{subtitle ? <Fragment>{title}<br /><span>{subtitle}</span></Fragment> : title}</h1>
+        <p class="article-lead">{lead ?? description}</p>
+        <div class="article-author">
+          <img class="author-photo" src="/images/simon-portrait.png" alt={SITE.author} width="42" height="48" tabindex="0" />
+          <div><strong>{SITE.author}</strong><small>{SITE.authorRole}</small></div>
+        </div>
+        <a class="back-link" href="/">← Back to the blog</a>
+      </header>
+
+      {
+        toc.length > 0 && (
+          <nav class="toc toc-mobile" aria-label="On this page">
+            <div class="toc-label">ON THIS PAGE</div>
+            {toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
+          </nav>
+        )
+      }
+    <article class="article-body">
+      {
+        project && (
+          <div class="project-banner">
+            <div class="project-mark" aria-hidden="true">{ICONS[project.icon]}</div>
+            <div>
+              <strong>{project.name}{project.suffix && <span>{project.suffix}</span>}</strong>
+              {project.tagline && <small>{project.tagline}</small>}
+            </div>
+          </div>
+        )
+      }
+
+      <Content />
+
+      {
+        primaryLinks.length > 0 && (
+          <div class="article-actions">
+            {primaryLinks.map((l) => (
+              <a class:list={['button', { primary: l.primary }]} href={l.url}>{l.label} ↗</a>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        original && (
+          <div class="article-end">
+            <p>This article is being moved from the old site.</p>
+            <a class="read" href={original}>Read the original post ↗</a>
+          </div>
+        )
+      }
+
+    </article>
+      {
+        next && (
+          <a class="next-post" href={postPath(next)}>
+            <small>KEEP READING</small>
+            <strong>{fullTitle(next)} →</strong>
+          </a>
+        )
+      }
+    </div>
+
+    {
+      (toc.length > 0 || project) && (
+        <aside class="toc toc-side" aria-label="On this page">
+          {toc.length > 0 && <div class="toc-label">ON THIS PAGE</div>}
+          {toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
+          {project?.links.filter((l) => l.url.includes('github.com')).map((l) => (
+            <a class="source-link" href={l.url}>Project on GitHub ↗</a>
+          ))}
+        </aside>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.reading-progress');
+  function updateProgress() {
+    if (!bar) return;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
+  }
+  addEventListener('scroll', updateProgress, { passive: true });
+  addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // Highlight the section being read in "On this page".
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc a[href^="#"]')];
+  const sections = tocLinks
+    .map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    .filter((el): el is HTMLElement => !!el);
+  function markCurrent() {
+    let current = sections[0];
+    for (const el of sections) if (el.getBoundingClientRect().top < innerHeight * 0.35) current = el;
+    tocLinks.forEach((a) => a.classList.toggle('is-current', a.hash.slice(1) === current?.id));
+  }
+  if (sections.length) {
+    addEventListener('scroll', markCurrent, { passive: true });
+    markCurrent();
+  }
+</script>

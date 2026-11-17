@@ -1,0 +1,325 @@
+---
+/**
+ * Ring Rollout: a small sorting game for the Courses page header.
+ * Devices fall towards three deployment rings (Pilot, Broad, Production) and land in the bin below them.
+ * Send the lowest device to the ring on its badge: click/tap a ring, or press 1 2 3 (or ← ↓ →).
+ * Self-playing demo until someone interacts. Pauses when off-screen.
+ */
+---
+
+<div class="game">
+  <div class="game-hud" aria-hidden="true">
+    <span class="game-title">RING ROLLOUT</span>
+    <span class="game-hint" id="ringHint">Demo · click to play</span>
+    <span class="game-score" id="ringScore"></span>
+  </div>
+  <canvas
+    id="ringGame"
+    class="no-touch-scroll"
+    tabindex="0"
+    role="application"
+    aria-label="Ring Rollout mini game. Devices fall towards three deployment rings: Pilot, Broad and Production. Send the lowest device to the ring shown on its badge by clicking that ring, or with the keys 1, 2 and 3."
+  ></canvas>
+  <span class="sr-only" id="ringStatus" role="status"></span>
+</div>
+
+<script>
+  interface Device { x: number; y: number; ring: number; tx: number | null; vy: number; wobble: number }
+  interface Spark { x: number; y: number; vx: number; vy: number; life: number; color: string }
+  interface Popup { x: number; y: number; text: string; color: string; life: number }
+
+  const RINGS = [
+    { name: 'PILOT', short: 'P', color: '#ffb547', fill: 'rgba(255,181,71,0.14)' },
+    { name: 'BROAD', short: 'B', color: '#7d9fff', fill: 'rgba(84,127,255,0.16)' },
+    { name: 'PRODUCTION', short: 'PR', color: '#5bd68f', fill: 'rgba(91,214,143,0.14)' },
+  ];
+  const BAD = '#ff6b7a';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('#ringGame')!;
+  const ctx = canvas.getContext('2d')!;
+  const hint = document.querySelector<HTMLElement>('#ringHint')!;
+  const scoreEl = document.querySelector<HTMLElement>('#ringScore')!;
+  const status = document.querySelector<HTMLElement>('#ringStatus')!;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = matchMedia('(pointer: coarse)').matches;
+
+  const TOP = 28, BIN = 30;
+  let W = 0, H = 0;
+  let devices: Device[] = [], sparks: Spark[] = [], popups: Popup[] = [];
+  let mode: 'demo' | 'play' | 'over' = 'demo';
+  let score = 0, best = 0, combo = 0, health = 3, spawnIn = 0.5, playTime = 0, lastInput = 0, clock = 0, aiWait = 0;
+  const flash = [0, 0, 0];
+  const flashBad = [0, 0, 0];
+  let visible = true, running = false, last = 0;
+
+  try { best = Number(localStorage.getItem('ringRolloutBest')) || 0; } catch {}
+
+  const floorY = () => H - BIN;
+  const binW = () => W / 3;
+  const binOf = (x: number) => Math.max(0, Math.min(2, Math.floor(x / binW())));
+  const binCenter = (i: number) => binW() * i + binW() / 2;
+
+  function layout() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = rect.width; H = rect.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (const d of devices) d.x = Math.max(20, Math.min(W - 20, d.x));
+    draw();
+  }
+
+  function reset(next: 'demo' | 'play') {
+    mode = next;
+    devices = []; popups = [];
+    score = 0; combo = 0; health = 3; playTime = 0; spawnIn = 0.4;
+  }
+
+  const level = () => (mode === 'play' ? Math.min(playTime / 30, 3) : 0.5);
+
+  function spawn() {
+    const ring = Math.floor(Math.random() * 3);
+    // Mostly start above the wrong bin, so there's something to do.
+    let x = 24 + Math.random() * (W - 48);
+    if (binOf(x) === ring && Math.random() < 0.7) x = binCenter((ring + 1 + Math.floor(Math.random() * 2)) % 3) + (Math.random() - 0.5) * binW() * 0.6;
+    devices.push({ x, y: TOP - 4, ring, tx: null, vy: 22 + level() * 12 + Math.random() * 6, wobble: Math.random() * 6 });
+  }
+
+  /** The device closest to the floor that hasn't been sent anywhere yet. */
+  const lowest = () => devices.filter((d) => d.tx === null).sort((a, b) => b.y - a.y)[0];
+
+  function route(bin: number) {
+    const d = lowest();
+    if (!d) return;
+    d.tx = binCenter(bin) + (Math.random() - 0.5) * 18;
+    d.vy = Math.max(d.vy, 70);
+  }
+
+  function burst(x: number, y: number, color: string, n = 12) {
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI * Math.random(), s = 30 + Math.random() * 90;
+      sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 0.3 + Math.random() * 0.35, color });
+    }
+  }
+
+  function land(d: Device) {
+    const bin = binOf(d.x);
+    const ok = bin === d.ring;
+    if (ok) {
+      flash[bin] = 0.35;
+      burst(d.x, floorY(), RINGS[bin].color, 10);
+      if (mode === 'play') {
+        combo++;
+        const pts = 1 + Math.floor(combo / 5);
+        score += pts;
+        popups.push({ x: d.x, y: floorY() - 14, text: pts > 1 ? `+${pts}` : '+1', color: RINGS[bin].color, life: 0.7 });
+      }
+    } else {
+      flashBad[bin] = 0.45;
+      burst(d.x, floorY(), BAD, 14);
+      popups.push({ x: d.x, y: floorY() - 14, text: 'WRONG RING', color: BAD, life: 0.9 });
+      if (mode === 'play') {
+        combo = 0;
+        health--;
+        if (health <= 0) gameOver();
+      }
+    }
+  }
+
+  function gameOver() {
+    mode = 'over';
+    if (score > best) { best = score; try { localStorage.setItem('ringRolloutBest', String(best)); } catch {} }
+    status.textContent = `Rollout halted. ${score} points. Best ${best}.`;
+  }
+
+  function update(dt: number) {
+    clock += dt;
+    if (mode === 'play') {
+      playTime += dt;
+      if (clock - lastInput > 20) reset('demo');
+    } else if (mode === 'over' && clock - lastInput > 12) {
+      reset('demo');
+    }
+
+    if (mode !== 'over') {
+      spawnIn -= dt;
+      if (spawnIn <= 0) {
+        spawn();
+        const base = mode === 'play' ? Math.max(0.75, 2.0 - playTime * 0.02) : 1.6;
+        spawnIn = base * (0.75 + Math.random() * 0.5);
+      }
+
+      // Demo: route the lowest device after a short "reaction time", now and then to the wrong ring.
+      if (mode === 'demo') {
+        const d = lowest();
+        if (d && d.y > TOP + 14) {
+          aiWait -= dt;
+          if (aiWait <= 0) {
+            if (binOf(d.x) !== d.ring || Math.random() < 0.2) route(Math.random() < 0.06 ? (d.ring + 1) % 3 : d.ring);
+            else d.tx = d.x; // already above the right ring: let it fall
+            aiWait = 0.35 + Math.random() * 0.5;
+          }
+        }
+      }
+    }
+
+    for (const d of devices) {
+      d.wobble += dt * 3;
+      if (d.tx !== null) d.x += (d.tx - d.x) * Math.min(1, dt * 9);
+      d.y += d.vy * dt;
+      if (d.y >= floorY() - 8) { d.y = 9999; if (mode !== 'over') land(d); }
+    }
+    devices = devices.filter((d) => d.y < 9000);
+    if (mode === 'over') devices = [];
+
+    for (let i = 0; i < 3; i++) { flash[i] = Math.max(0, flash[i] - dt); flashBad[i] = Math.max(0, flashBad[i] - dt); }
+    for (const s of sparks) { s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 200 * dt; s.life -= dt; }
+    sparks = sparks.filter((s) => s.life > 0);
+    for (const p of popups) { p.y -= 22 * dt; p.life -= dt; }
+    popups = popups.filter((p) => p.life > 0);
+
+    if (mode === 'demo') hint.textContent = touch ? 'Demo · tap to play' : 'Demo · click to play';
+    else if (mode === 'play') hint.textContent = touch ? 'Tap the ring on the badge' : 'Click a ring or press 1 2 3';
+    else hint.textContent = touch ? 'Rollout halted · tap to retry' : 'Rollout halted · click or press Space';
+    scoreEl.textContent =
+      mode === 'demo'
+        ? best ? `Best ${best}` : ''
+        : `Score ${score}${combo >= 5 ? ` · Combo ×${1 + Math.floor(combo / 5)}` : ''} · Health ${'●'.repeat(Math.max(0, health))}${'○'.repeat(3 - Math.max(0, health))} · Best ${Math.max(best, score)}`;
+  }
+
+  function drawBins() {
+    const y = floorY(), bw = binW();
+    for (let i = 0; i < 3; i++) {
+      const r = RINGS[i], x = bw * i;
+      ctx.fillStyle = flashBad[i] > 0 ? 'rgba(255,107,122,0.22)' : r.fill;
+      ctx.globalAlpha = 0.6 + flash[i] * 1.2;
+      ctx.fillRect(x + 4, y + 3, bw - 8, BIN - 7);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = flashBad[i] > 0 ? BAD : r.color;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x + 4, y); ctx.lineTo(x + 4, y + BIN - 4); ctx.lineTo(x + bw - 4, y + BIN - 4); ctx.lineTo(x + bw - 4, y);
+      ctx.stroke();
+      ctx.fillStyle = r.color;
+      ctx.font = '600 10px Inter, system-ui, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const label = W < 560 ? r.name.replace('PRODUCTION', 'PROD') : `${i + 1} · ${r.name}`;
+      ctx.fillText(label, x + bw / 2, y + BIN / 2 - 1);
+      // Lane guides
+      if (i > 0) {
+        ctx.strokeStyle = 'rgba(154,180,255,0.07)';
+        ctx.setLineDash([3, 5]);
+        ctx.beginPath(); ctx.moveTo(x, TOP + 4); ctx.lineTo(x, y - 2); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  }
+
+  function drawDevice(d: Device, selected: boolean) {
+    const r = RINGS[d.ring];
+    ctx.save();
+    ctx.translate(d.x, d.y);
+    ctx.rotate(Math.sin(d.wobble) * 0.05);
+    // Laptop: screen + base
+    ctx.lineWidth = 1.4; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#9ab4ff'; ctx.fillStyle = 'rgba(84,127,255,0.18)';
+    ctx.beginPath(); ctx.roundRect(-11, -9, 22, 14, 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-14, 7); ctx.lineTo(14, 7); ctx.stroke();
+    // Ring badge on the screen
+    ctx.fillStyle = r.color;
+    ctx.shadowColor = r.color; ctx.shadowBlur = 8;
+    ctx.font = '700 9px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(r.short, 0, -2);
+    ctx.shadowBlur = 0;
+    if (selected) {
+      ctx.strokeStyle = 'rgba(219,229,255,0.7)'; ctx.lineWidth = 1;
+      // Corner brackets around the device the next click will move.
+      const sx = 18, sy = 14, c = 5;
+      for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+        ctx.beginPath();
+        ctx.moveTo(dx * sx, dy * (sy - c)); ctx.lineTo(dx * sx, dy * sy); ctx.lineTo(dx * (sx - c), dy * sy);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    drawBins();
+    const sel = mode === 'play' ? lowest() : undefined;
+    for (const d of devices) drawDevice(d, d === sel);
+    for (const s of sparks) {
+      ctx.globalAlpha = Math.min(1, s.life * 2.5);
+      ctx.fillStyle = s.color;
+      ctx.fillRect(s.x - 1, s.y - 1, 2, 2);
+    }
+    ctx.globalAlpha = 1;
+    ctx.font = '700 11px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const p of popups) {
+      ctx.globalAlpha = Math.min(1, p.life * 2);
+      ctx.fillStyle = p.color;
+      ctx.fillText(p.text, p.x, p.y);
+    }
+    ctx.globalAlpha = 1;
+    if (mode === 'over') {
+      ctx.fillStyle = '#dbe5ff';
+      ctx.font = '700 15px Inter, system-ui, sans-serif';
+      ctx.fillText(`Rollout halted · ${score} points`, W / 2, (TOP + floorY()) / 2);
+    }
+  }
+
+  function frame(now: number) {
+    if (!running) return;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  function start() {
+    if (running) return;
+    if (reducedMotion && mode === 'demo') { draw(); return; }
+    running = true;
+    last = performance.now();
+    requestAnimationFrame(frame);
+  }
+  function stop() { running = false; }
+  function sync() { (visible && !document.hidden ? start : stop)(); }
+
+  /** Returns true if this input started a new game (so it shouldn't also route a device). */
+  function begin(): boolean {
+    lastInput = clock;
+    const fresh = mode !== 'play';
+    if (fresh) reset('play');
+    start();
+    return fresh;
+  }
+
+  canvas.addEventListener('pointerdown', (ev) => {
+    canvas.focus({ preventScroll: true });
+    if (begin()) return;
+    route(binOf(ev.clientX - canvas.getBoundingClientRect().left));
+  });
+
+  const KEYS: Record<string, number> = { Digit1: 0, Numpad1: 0, ArrowLeft: 0, KeyA: 0, Digit2: 1, Numpad2: 1, ArrowDown: 1, KeyS: 1, Digit3: 2, Numpad3: 2, ArrowRight: 2, KeyD: 2 };
+  canvas.addEventListener('keydown', (ev) => {
+    if (ev.code in KEYS) {
+      ev.preventDefault();
+      if (!begin()) route(KEYS[ev.code]);
+    } else if (ev.code === 'Space' || ev.code === 'Enter') {
+      ev.preventDefault();
+      if (mode !== 'play') begin();
+    }
+  });
+
+  new ResizeObserver(layout).observe(canvas);
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(canvas);
+  document.addEventListener('visibilitychange', sync);
+
+  layout();
+  sync();
+</script>

@@ -1,0 +1,83 @@
+---
+import { ICONS, SITE } from '../lib/site';
+import { TOOLS } from '../lib/tools';
+import { formatDate, fullTitle, getPosts, postPath } from '../lib/posts';
+import SocialLinks from './SocialLinks.astro';
+
+interface Props {
+  /** Middle card: the tools list (homepage) or the latest posts (Tools page). */
+  show?: 'tools' | 'posts';
+  /** The homepage repeats the author card under the game on phones, so it hides this one there. */
+  hideAuthorOnMobile?: boolean;
+}
+const { show = 'tools', hideAuthorOnMobile = false } = Astro.props;
+
+const sidebarTools = TOOLS.filter((t) => t.sidebar !== false);
+const latest = show === 'posts' ? (await getPosts()).slice(0, 4) : [];
+---
+
+<aside class="home-sidebar" aria-label="About SIMSENblog">
+  <section class:list={['side-card', 'side-author', { 'hide-on-mobile': hideAuthorOnMobile }]}>
+    <div class="side-author-head">
+      <img class="author-photo" src="/images/simon-profile.png" alt={SITE.author} width="252" height="252" tabindex="0" />
+      <div class="side-author-name">
+        <strong>{SITE.author}</strong>
+        <small>{SITE.authorRole}</small>
+      </div>
+    </div>
+  </section>
+
+  <section class:list={['side-card', 'side-mvp-card', { 'hide-on-mobile': hideAuthorOnMobile }]}>
+    <img class="side-mvp" src="/images/mvp-logo-white.png" alt="Microsoft Most Valuable Professional" width="168" height="58" />
+  </section>
+
+  <section class:list={['side-card', 'side-social-card', { 'hide-on-mobile': hideAuthorOnMobile }]}>
+    <SocialLinks />
+  </section>
+
+  {
+    show === 'tools' ? (
+      <section class="side-card">
+        <h2 class="side-label">TOOLS</h2>
+        <ul class="side-tools">
+          {sidebarTools.map((t) => (
+            <li>
+              <a href={`/tools/#${t.id}`}>
+                <span class="side-tool-icon" aria-hidden="true">{t.icon}</span>
+                <span>
+                  <strong>{t.name}</strong>
+                  <small>{t.short}</small>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="side-more" href="/tools/">All tools →</a>
+      </section>
+    ) : (
+      <section class="side-card">
+        <h2 class="side-label">LATEST POSTS</h2>
+        <ul class="side-tools side-posts">
+          {latest.map((p) => (
+            <li>
+              <a href={postPath(p)}>
+                <span class="side-tool-icon" aria-hidden="true">{ICONS[p.data.icon]}</span>
+                <span>
+                  <strong>{fullTitle(p)}</strong>
+                  <small>{formatDate(p.data.date)}</small>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="side-more" href="/">All posts →</a>
+      </section>
+    )
+  }
+
+  <section class="side-card" id="learning">
+    <h2 class="side-label">COURSES</h2>
+    <p>Training on Windows Autopilot and macOS management.</p>
+    <a class="side-more" href="/course/">Explore courses →</a>
+  </section>
+</aside>

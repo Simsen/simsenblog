@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { TOOLS } from '../lib/tools';
+import { SITE } from '../lib/site';
+import Sidebar from '../components/Sidebar.astro';
+import SnakeGame from '../components/SnakeGame.astro';
+---
+
+<BaseLayout
+  title="Tools"
+  description="Free tools for Microsoft Intune, Windows and macOS admins: IntuneScope, AutopilotQR, MSIinfo, MacPPPC and WinMedia Builder."
+  active="tools"
+>
+  <section class="hero hero-compact">
+    <SnakeGame />
+  </section>
+
+  <div class="home-layout page-layout">
+  <div class="page-main">
+  <header class="page-head">
+    <div class="eyebrow">Tools</div>
+    <h1>Small tools for <span>everyday endpoint work.</span></h1>
+    <p class="page-lead">
+      Free tools built for problems I kept running into with Intune, Windows and macOS. The browser tools run entirely on your side
+      and talk directly to Microsoft Graph. No backend, no uploads.
+    </p>
+  </header>
+
+  <nav class="tool-index" aria-label="Tools on this page">
+    {
+      TOOLS.map((t) => (
+        <a href={`#${t.id}`}>
+          <span class="tool-icon tool-icon-sm" aria-hidden="true">{t.icon}</span>
+          <span>
+            <strong>{t.name}</strong>
+            <small>{t.short}</small>
+          </span>
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="tool-list">
+    {
+      TOOLS.map((t) => (
+        <section class="tool-card" id={t.id} aria-labelledby={`${t.id}-name`}>
+          <div class="tool-card-head">
+            <span class="tool-icon" aria-hidden="true">{t.icon}</span>
+            <div>
+              <h2 id={`${t.id}-name`}>
+                {t.name}
+                {t.suffix && <span>{t.suffix}</span>}
+              </h2>
+              <p class="tool-tagline">{t.tagline}</p>
+            </div>
+          </div>
+          <ul class="tool-chips" aria-label="Details">
+            {t.chips.map((c) => <li>{c}</li>)}
+          </ul>
+
+          <div class="tool-body">
+            <p class="tool-intro">{t.intro}</p>
+            <div class="tool-features">
+              <h3>What it does</h3>
+              <ul>
+                {t.features.map((f) => <li>{f}</li>)}
+              </ul>
+              {t.note && <p class="tool-note">{t.note}</p>}
+            </div>
+          </div>
+
+          <div class="tool-actions">
+            {t.url ? (
+              <a class="button primary" href={t.url}>{t.openLabel ?? `Open ${t.name}`} ↗</a>
+            ) : (
+              <a class="button primary" href={t.github}>Get it on GitHub ↗</a>
+            )}
+            {t.writeup && <a class="button" href={t.writeup}>Read the write-up →</a>}
+            {t.url && <a class="button" href={t.github}>Source on GitHub ↗</a>}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <section class="tool-feedback">
+    <div>
+      <h2>Found a bug, or want something added?</h2>
+      <p>All tools are free, and I keep improving them based on what people actually run into. Open an issue on the tool's GitHub repository, or get in touch.</p>
+    </div>
+    <div class="tool-feedback-links">
+      <a class="button" href={SITE.github}>GitHub ↗</a>
+      <a class="button" href={SITE.linkedin}>LinkedIn ↗</a>
+    </div>
+  </section>
+  </div>
+  <Sidebar show="posts" />
+  </div>
+</BaseLayout>

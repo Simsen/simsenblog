@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  active?: 'blog' | 'tools' | 'courses' | 'links' | 'about';
+  type?: 'website' | 'article';
+}
+
+const { title, description = SITE.description, active, type = 'website' } = Astro.props;
+const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${SITE.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0d101c" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title ?? SITE.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta name="generator" content={Astro.generator} />
+    <slot name="head" />
+    <script is:inline>
+      // Page transitions: match the post box on the frontpage with the article headline box.
+      (() => {
+        const cardFor = (url) => {
+          try {
+            const path = new URL(url, location.href).pathname;
+            return document.querySelector('.expanding-post a.read[href="' + path + '"]')?.closest('.expanding-post');
+          } catch { return null; }
+        };
+        const name = (el) => { if (el) el.style.viewTransitionName = 'post-card'; };
+        const clear = () => document.querySelectorAll('.expanding-post').forEach((el) => (el.style.viewTransitionName = ''));
+        // Leaving the frontpage for an article: the clicked box becomes the headline box.
+        addEventListener('pageswap', (e) => {
+          if (e.viewTransition && e.activation?.entry?.url) name(cardFor(e.activation.entry.url));
+        });
+        // Coming back to the frontpage from an article: the headline box shrinks into its row.
+        addEventListener('pagereveal', (e) => {
+          const from = window.navigation?.activation?.from?.url;
+          if (!e.viewTransition || !from) return;
+          const card = cardFor(from);
+          if (!card) return;
+          name(card);
+          e.viewTransition.finished.finally(clear);
+        });
+        addEventListener('pageshow', (e) => { if (e.persisted) clear(); });
+      })();
+    </script>
+  </head>
+  <body>
+    <slot name="before" />
+    <div class="wrap">
+      <Header active={active} />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

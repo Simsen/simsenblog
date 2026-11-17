@@ -1,0 +1,435 @@
+---
+/**
+ * Link Up: a small network puzzle for the Links page header.
+ * New endpoints pop up around the cloud. Drag a cable from the cloud or any connected endpoint to the new one
+ * before its timer runs out. Cables have a limited range and can't cross each other, so the board fills up.
+ * Mouse / touch: drag (or click one node, then the other). Keyboard: Space links the most urgent endpoint.
+ * Self-playing demo until someone interacts. Pauses when off-screen.
+ */
+---
+
+<div class="game">
+  <div class="game-hud" aria-hidden="true">
+    <span class="game-title">LINK UP</span>
+    <span class="game-hint" id="linkHint">Demo · click to play</span>
+    <span class="game-score" id="linkScore"></span>
+  </div>
+  <canvas
+    id="linkGame"
+    class="no-touch-scroll"
+    tabindex="0"
+    role="application"
+    aria-label="Link Up mini game. New endpoints appear around the cloud. Connect each one with a cable from the cloud or from an endpoint that is already connected, before its timer runs out. Cables can't cross. Drag between two nodes, or click one and then the other. Keyboard: Space connects the most urgent endpoint."
+  ></canvas>
+  <span class="sr-only" id="linkStatus" role="status"></span>
+</div>
+
+<script>
+  interface Node { id: number; x: number; y: number; linked: boolean; hub?: boolean; timer: number; max: number; born: number; ai: number }
+  interface Edge { a: Node; b: Node; grow: number; seed: number }
+  interface Spark { x: number; y: number; vx: number; vy: number; life: number; color: string }
+  interface Popup { x: number; y: number; text: string; color: string; life: number }
+
+  const C = {
+    cable: '#547fff',
+    packet: '#dbe5ff',
+    node: '#9ab4ff',
+    nodeFill: 'rgba(84,127,255,0.22)',
+    pending: '#ffb547',
+    urgent: '#ff6b7a',
+    ok: '#5bd68f',
+    bad: '#ff6b7a',
+  };
+
+  const canvas = document.querySelector<HTMLCanvasElement>('#linkGame')!;
+  const ctx = canvas.getContext('2d')!;
+  const hint = document.querySelector<HTMLElement>('#linkHint')!;
+  const scoreEl = document.querySelector<HTMLElement>('#linkScore')!;
+  const status = document.querySelector<HTMLElement>('#linkStatus')!;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = matchMedia('(pointer: coarse)').matches;
+
+  const TOP = 28, PAD = 14, HIT = touch ? 24 : 16;
+  let W = 0, H = 0;
+  let nodes: Node[] = [], edges: Edge[] = [], sparks: Spark[] = [], popups: Popup[] = [];
+  let hub: Node;
+  let mode: 'demo' | 'play' | 'over' = 'demo';
+  let score = 0, best = 0, health = 3, level = 1, spawnIn = 0.6, lastInput = 0, clock = 0, clearIn = 0, nextId = 0;
+  let dragFrom: Node | null = null, selected: Node | null = null, pointer = { x: 0, y: 0 }, moved = false;
+  let visible = true, running = false, last = 0;
+
+  try { best = Number(localStorage.getItem('linkUpBest')) || 0; } catch {}
+
+  const range = () => Math.max(110, Math.min(180, W * 0.19));
+
+  function layout() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const changed = Math.abs(rect.width - W) > 1 || Math.abs(rect.height - H) > 1;
+    W = rect.width; H = rect.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (changed) clearBoard();
+    draw();
+  }
+
+  function clearBoard() {
+    hub = { id: nextId++, x: W / 2, y: (TOP + H) / 2 + 2, linked: true, hub: true, timer: 0, max: 0, born: clock, ai: 0 };
+    nodes = [hub]; edges = []; dragFrom = selected = null;
+  }
+
+  function reset(next: 'demo' | 'play') {
+    mode = next;
+    score = 0; health = 3; level = 1; spawnIn = 0.5; clearIn = 0; popups = [];
+    clearBoard();
+  }
+
+  // ---- Geometry -------------------------------------------------------------
+  const cross = (ax: number, ay: number, bx: number, by: number, cx: number, cy: number) => (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+  function segmentsCross(p1: Node | { x: number; y: number }, p2: { x: number; y: number }, q1: { x: number; y: number }, q2: { x: number; y: number }) {
+    const d1 = cross(q1.x, q1.y, q2.x, q2.y, p1.x, p1.y), d2 = cross(q1.x, q1.y, q2.x, q2.y, p2.x, p2.y);
+    const d3 = cross(p1.x, p1.y, p2.x, p2.y, q1.x, q1.y), d4 = cross(p1.x, p1.y, p2.x, p2.y, q2.x, q2.y);
+    return d1 * d2 < 0 && d3 * d4 < 0;
+  }
+  function distToSegment(px: number, py: number, a: { x: number; y: number }, b: { x: number; y: number }) {
+    const dx = b.x - a.x, dy = b.y - a.y, len = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((px - a.x) * dx + (py - a.y) * dy) / len));
+    return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy));
+  }
+
+  /** Why a cable between a and b isn't allowed, or '' if it is. */
+  function linkProblem(a: Node, b: Node): string {
+    if (a === b) return 'same';
+    if (a.linked === b.linked) return a.linked ? 'both online' : 'no signal';
+    if (Math.hypot(a.x - b.x, a.y - b.y) > range()) return 'too far';
+    for (const e of edges) {
+      if (e.a === a || e.a === b || e.b === a || e.b === b) continue;
+      if (segmentsCross(a, b, e.a, e.b)) return 'crossing';
+    }
+    for (const n of nodes) {
+      if (n === a || n === b) continue;
+      if (distToSegment(n.x, n.y, a, b) < (n.hub ? 18 : 10)) return 'blocked';
+    }
+    return '';
+  }
+
+  const bestLinkFor = (p: Node) =>
+    nodes
+      .filter((n) => n.linked && !linkProblem(n, p))
+      .sort((m, n) => Math.hypot(m.x - p.x, m.y - p.y) - Math.hypot(n.x - p.x, n.y - p.y))[0];
+
+  // ---- Game flow ------------------------------------------------------------
+  function spawn(): boolean {
+    for (let tries = 0; tries < 80; tries++) {
+      const x = PAD + 6 + Math.random() * (W - PAD * 2 - 12);
+      const y = TOP + 12 + Math.random() * (H - TOP - 26);
+      if (Math.abs(x - hub.x) < 34 && Math.abs(y - hub.y) < 26) continue;
+      if (nodes.some((n) => Math.hypot(n.x - x, n.y - y) < 30)) continue;
+      if (edges.some((e) => distToSegment(x, y, e.a, e.b) < 16)) continue;
+      const max = mode === 'play' ? Math.max(3.2, 7.5 - level * 0.8) : 6;
+      const p: Node = { id: nextId++, x, y, linked: false, timer: max, max, born: clock, ai: 0.7 + Math.random() * 0.9 };
+      if (!bestLinkFor(p)) continue;
+      nodes.push(p);
+      return true;
+    }
+    return false;
+  }
+
+  function burst(x: number, y: number, color: string, n = 12) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, s = 25 + Math.random() * 90;
+      sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 0.3 + Math.random() * 0.35, color });
+    }
+  }
+
+  function connect(from: Node, to: Node, auto = false): boolean {
+    const problem = linkProblem(from, to);
+    if (problem) {
+      if (mode === 'play' && problem !== 'same') popups.push({ x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 - 8, text: problem.toUpperCase(), color: C.bad, life: 0.8 });
+      return false;
+    }
+    const p = from.linked ? to : from, q = from.linked ? from : to;
+    p.linked = true;
+    edges.push({ a: q, b: p, grow: 0, seed: Math.random() });
+    burst(p.x, p.y, C.ok, 10);
+    if (mode === 'play') {
+      // Drawing the cable yourself, quickly, earns the bonus. Space auto-links score 1.
+      const quick = !auto && p.timer > p.max * 0.5;
+      score += quick ? 2 : 1;
+      popups.push({ x: p.x, y: p.y - 16, text: quick ? '+2' : '+1', color: C.ok, life: 0.7 });
+    }
+    return true;
+  }
+
+  function autoLink() {
+    const p = nodes.filter((n) => !n.linked).sort((a, b) => a.timer - b.timer)[0];
+    if (!p) return;
+    const q = bestLinkFor(p);
+    if (q) connect(q, p, true);
+  }
+
+  function boardFull() {
+    // Nothing more fits: celebrate and start a fresh network.
+    clearIn = 1.4;
+    if (mode === 'play') {
+      score += 5;
+      level++;
+      popups.push({ x: W / 2, y: TOP + 14, text: `NETWORK COMPLETE +5 · LEVEL ${level}`, color: C.ok, life: 1.3 });
+    } else {
+      popups.push({ x: W / 2, y: TOP + 14, text: 'NETWORK COMPLETE', color: C.ok, life: 1.3 });
+    }
+    for (const n of nodes) if (n.linked && !n.hub) burst(n.x, n.y, C.cable, 4);
+  }
+
+  function gameOver() {
+    mode = 'over';
+    dragFrom = selected = null;
+    if (score > best) { best = score; try { localStorage.setItem('linkUpBest', String(best)); } catch {} }
+    status.textContent = `Network down. ${score} points. Best ${best}.`;
+  }
+
+  function update(dt: number) {
+    clock += dt;
+    if (mode === 'play' && clock - lastInput > 20) reset('demo');
+    else if (mode === 'over' && clock - lastInput > 12) reset('demo');
+
+    if (clearIn > 0) {
+      clearIn -= dt;
+      if (clearIn <= 0) { nodes = nodes.filter((n) => n.linked); clearBoard(); spawnIn = 0.4; }
+    } else if (mode !== 'over') {
+      const pending = nodes.filter((n) => !n.linked);
+      const maxPending = mode === 'play' ? Math.min(3, 1 + Math.floor(level / 2)) : 1;
+      spawnIn -= dt;
+      if (spawnIn <= 0 && pending.length < maxPending) {
+        if (!spawn() && pending.length === 0) boardFull();
+        spawnIn = mode === 'play' ? Math.max(0.5, 1.6 - level * 0.15) : 0.9;
+      }
+
+      for (const p of pending) {
+        p.timer -= dt;
+        if (mode === 'demo') {
+          p.ai -= dt;
+          if (p.ai <= 0) { const q = bestLinkFor(p); if (q) connect(q, p); else p.ai = 0.4; }
+        }
+        if (p.timer <= 0) {
+          burst(p.x, p.y, C.urgent, 14);
+          popups.push({ x: p.x, y: p.y - 14, text: 'OFFLINE', color: C.urgent, life: 0.9 });
+          nodes = nodes.filter((n) => n !== p);
+          if (dragFrom === p) dragFrom = null;
+          if (selected === p) selected = null;
+          if (mode === 'play') { health--; if (health <= 0) gameOver(); }
+        }
+      }
+    }
+
+    for (const e of edges) e.grow = Math.min(1, e.grow + dt * 5);
+    for (const s of sparks) { s.x += s.vx * dt; s.y += s.vy * dt; s.vx *= 0.93; s.vy *= 0.93; s.life -= dt; }
+    sparks = sparks.filter((s) => s.life > 0);
+    for (const p of popups) { p.y -= 18 * dt; p.life -= dt; }
+    popups = popups.filter((p) => p.life > 0);
+
+    if (mode === 'demo') hint.textContent = touch ? 'Demo · tap to play' : 'Demo · click to play';
+    else if (mode === 'play') hint.textContent = touch ? 'Drag a cable to each new endpoint' : 'Drag from the cloud or a node · Space auto-links';
+    else hint.textContent = touch ? 'Network down · tap to retry' : 'Network down · click or press Space';
+    scoreEl.textContent =
+      mode === 'demo'
+        ? best ? `Best ${best}` : ''
+        : `Score ${score} · Level ${level} · Uptime ${'●'.repeat(Math.max(0, health))}${'○'.repeat(3 - Math.max(0, health))} · Best ${Math.max(best, score)}`;
+  }
+
+  // ---- Drawing --------------------------------------------------------------
+  function drawCloud(x: number, y: number) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.strokeStyle = C.node; ctx.fillStyle = 'rgba(84,127,255,0.2)'; ctx.lineWidth = 1.6;
+    ctx.shadowColor = C.cable; ctx.shadowBlur = 12 + Math.sin(clock * 2) * 4;
+    ctx.beginPath();
+    ctx.moveTo(-15, 8);
+    ctx.arc(-11, 2, 6.5, Math.PI * 0.6, Math.PI * 1.45);
+    ctx.arc(-1, -4, 9, Math.PI * 1.1, Math.PI * 1.85);
+    ctx.arc(10, 1, 7, Math.PI * 1.35, Math.PI * 0.4);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawEndpoint(n: Node) {
+    const pending = !n.linked;
+    const urgent = pending && n.timer < n.max * 0.35;
+    const color = pending ? (urgent ? C.urgent : C.pending) : C.node;
+    const pop = Math.min(1, (clock - n.born) * 6);
+    ctx.save();
+    ctx.translate(n.x, n.y);
+    ctx.scale(pop, pop);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.4;
+    ctx.fillStyle = pending ? 'rgba(255,181,71,0.14)' : C.nodeFill;
+    if (pending) { ctx.shadowColor = color; ctx.shadowBlur = urgent ? 10 + Math.sin(clock * 14) * 5 : 6; }
+    ctx.beginPath(); ctx.roundRect(-7, -6, 14, 10, 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-4, 7); ctx.lineTo(4, 7); ctx.stroke();
+    ctx.shadowBlur = 0;
+    if (pending) {
+      // Timer ring
+      ctx.strokeStyle = color; ctx.globalAlpha = 0.85; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(0, 0, 13, -Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 * n.timer) / n.max); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    if (n === selected || n === dragFrom) {
+      ctx.strokeStyle = 'rgba(219,229,255,0.75)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(0, 0, 17, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function nodeAt(x: number, y: number) {
+    let hit: Node | undefined, bestD = Infinity;
+    for (const n of nodes) {
+      const d = Math.hypot(n.x - x, n.y - y);
+      if (d < (n.hub ? HIT + 6 : HIT) && d < bestD) { hit = n; bestD = d; }
+    }
+    return hit;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const fade = clearIn > 0 ? Math.max(0, Math.min(1, clearIn / 0.6)) : 1;
+
+    // Faint range circle around whatever you're dragging from.
+    const src = dragFrom ?? selected;
+    if (src && mode === 'play') {
+      ctx.strokeStyle = 'rgba(154,180,255,0.12)'; ctx.setLineDash([3, 5]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(src.x, src.y, range(), 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    ctx.globalAlpha = fade;
+    ctx.lineCap = 'round';
+    for (const e of edges) {
+      const bx = e.a.x + (e.b.x - e.a.x) * e.grow, by = e.a.y + (e.b.y - e.a.y) * e.grow;
+      ctx.strokeStyle = clearIn > 0 ? C.ok : C.cable; ctx.lineWidth = 1.8;
+      ctx.shadowColor = C.cable; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(bx, by); ctx.stroke();
+      if (e.grow >= 1) {
+        const t = (clock * 0.9 + e.seed) % 1;
+        ctx.fillStyle = C.packet; ctx.shadowColor = C.packet; ctx.shadowBlur = 6;
+        ctx.beginPath(); ctx.arc(e.a.x + (e.b.x - e.a.x) * t, e.a.y + (e.b.y - e.a.y) * t, 1.6, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.shadowBlur = 0;
+
+    // The cable you're drawing right now.
+    if (dragFrom && moved) {
+      const target = nodeAt(pointer.x, pointer.y);
+      const ok = target ? !linkProblem(dragFrom, target) : Math.hypot(pointer.x - dragFrom.x, pointer.y - dragFrom.y) <= range();
+      ctx.strokeStyle = ok ? 'rgba(219,229,255,0.8)' : C.bad; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(dragFrom.x, dragFrom.y); ctx.lineTo(target ? target.x : pointer.x, target ? target.y : pointer.y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    for (const n of nodes) if (!n.hub) drawEndpoint(n);
+    ctx.globalAlpha = 1;
+    drawCloud(hub.x, hub.y);
+
+    for (const s of sparks) {
+      ctx.globalAlpha = Math.min(1, s.life * 2.5);
+      ctx.fillStyle = s.color;
+      ctx.fillRect(s.x - 1, s.y - 1, 2, 2);
+    }
+    ctx.globalAlpha = 1;
+    ctx.font = '700 11px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const p of popups) {
+      ctx.globalAlpha = Math.min(1, p.life * 2);
+      ctx.fillStyle = p.color;
+      ctx.fillText(p.text, p.x, p.y);
+    }
+    ctx.globalAlpha = 1;
+    if (mode === 'over') {
+      ctx.fillStyle = 'rgba(15,20,35,0.6)';
+      ctx.fillRect(0, TOP, W, H - TOP);
+      ctx.fillStyle = '#dbe5ff';
+      ctx.font = '700 15px Inter, system-ui, sans-serif';
+      ctx.fillText(`Network down · ${score} points`, W / 2, (TOP + H) / 2);
+    }
+  }
+
+  // ---- Loop & input ---------------------------------------------------------
+  function frame(now: number) {
+    if (!running) return;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  function start() {
+    if (running) return;
+    if (reducedMotion && mode === 'demo') { draw(); return; }
+    running = true;
+    last = performance.now();
+    requestAnimationFrame(frame);
+  }
+  function stop() { running = false; }
+  function sync() { (visible && !document.hidden ? start : stop)(); }
+
+  function begin(): boolean {
+    lastInput = clock;
+    const fresh = mode !== 'play';
+    if (fresh) reset('play');
+    start();
+    return fresh;
+  }
+
+  const local = (ev: PointerEvent) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+  };
+
+  canvas.addEventListener('pointerdown', (ev) => {
+    canvas.focus({ preventScroll: true });
+    if (begin()) return;
+    pointer = local(ev); moved = false;
+    const n = nodeAt(pointer.x, pointer.y);
+    if (!n) { selected = null; return; }
+    // Click-click: a node is already selected, so this click finishes the cable.
+    if (selected && selected !== n) {
+      if (connect(selected, n) || n.linked === selected.linked) selected = n.linked === selected.linked ? n : null;
+      return;
+    }
+    dragFrom = n;
+    canvas.setPointerCapture(ev.pointerId);
+  });
+  canvas.addEventListener('pointermove', (ev) => {
+    if (!dragFrom) return;
+    const p = local(ev);
+    if (Math.hypot(p.x - pointer.x, p.y - pointer.y) > 4) moved = true;
+    pointer = p;
+    lastInput = clock;
+  });
+  canvas.addEventListener('pointerup', (ev) => {
+    if (!dragFrom) return;
+    const p = local(ev);
+    const target = nodeAt(p.x, p.y);
+    if (moved && target && target !== dragFrom) { connect(dragFrom, target); selected = null; }
+    else if (!moved) selected = dragFrom === selected ? null : dragFrom;
+    dragFrom = null;
+    lastInput = clock;
+  });
+  canvas.addEventListener('pointercancel', () => (dragFrom = null));
+
+  canvas.addEventListener('keydown', (ev) => {
+    if (ev.code === 'Space' || ev.code === 'Enter') {
+      ev.preventDefault();
+      if (!begin()) autoLink();
+    } else if (ev.code === 'Escape') {
+      selected = null;
+    }
+  });
+
+  new ResizeObserver(layout).observe(canvas);
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(canvas);
+  document.addEventListener('visibilitychange', sync);
+
+  layout();
+  sync();
+</script>

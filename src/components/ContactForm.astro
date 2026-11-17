@@ -1,0 +1,124 @@
+---
+/**
+ * Contact form. Sends through Formspree or Web3Forms (configured in src/lib/site.ts → CONTACT).
+ * Spam protection: a small sum question, a hidden honeypot field, and a minimum fill-in time.
+ */
+import { CONTACT, SITE } from '../lib/site';
+
+const endpoint = CONTACT.formspreeId
+  ? `https://formspree.io/f/${CONTACT.formspreeId}`
+  : CONTACT.web3formsKey
+    ? 'https://api.web3forms.com/submit'
+    : '';
+---
+
+<form
+  class="contact-form"
+  id="contactForm"
+  action={endpoint || undefined}
+  method="post"
+  data-endpoint={endpoint}
+  data-web3forms-key={CONTACT.web3formsKey || undefined}
+  novalidate
+>
+  <div class="cf-row">
+    <label class="cf-field">
+      <span>Name</span>
+      <input name="name" type="text" autocomplete="name" required maxlength="100" />
+    </label>
+    <label class="cf-field">
+      <span>Email</span>
+      <input name="email" type="email" autocomplete="email" required maxlength="200" />
+    </label>
+  </div>
+  <label class="cf-field">
+    <span>Message</span>
+    <textarea name="message" rows="6" required maxlength="5000"></textarea>
+  </label>
+
+  <!-- Honeypot: hidden from people, irresistible to bots. -->
+  <div class="cf-hp" aria-hidden="true">
+    <label>Website <input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="cf-bottom">
+    <label class="cf-field cf-sum">
+      <span>Spam check: what is <strong id="cfQuestion">…</strong>?</span>
+      <input name="sum" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" required maxlength="3" />
+    </label>
+    <button class="button primary cf-send" type="submit">Send message</button>
+  </div>
+
+  <p class="cf-status" id="cfStatus" role="status" aria-live="polite"></p>
+</form>
+
+<script define:vars={{ linkedin: SITE.linkedin }}>
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('cfStatus');
+  const question = document.getElementById('cfQuestion');
+  const sendBtn = form.querySelector('.cf-send');
+  const loadedAt = Date.now();
+
+  let answer = 0;
+  function newSum() {
+    const a = 2 + Math.floor(Math.random() * 8);
+    const b = 1 + Math.floor(Math.random() * 9);
+    answer = a + b;
+    question.textContent = `${a} + ${b}`;
+    form.elements.sum.value = '';
+  }
+  newSum();
+
+  function say(text, kind) {
+    status.textContent = text;
+    status.dataset.kind = kind || '';
+  }
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const f = form.elements;
+    const name = f.name.value.trim(), email = f.email.value.trim(), message = f.message.value.trim();
+
+    if (!name || !email || !message) return say('Please fill in your name, email and message.', 'error');
+    if (!f.email.checkValidity()) return say("That email address doesn't look right.", 'error');
+    if (Number(f.sum.value.trim()) !== answer) {
+      newSum();
+      f.sum.focus();
+      return say('The answer to the sum was not right. Try the new one.', 'error');
+    }
+    // Bots fill hidden fields and submit instantly. Pretend it worked, send nothing.
+    if (f.website.value || Date.now() - loadedAt < 3000) {
+      form.reset(); newSum();
+      return say("Thanks! Your message is on its way. I'll get back to you.", 'ok');
+    }
+
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) {
+      return say(`The contact form isn't connected yet. Until it is, reach me on LinkedIn: ${linkedin}`, 'error');
+    }
+
+    const payload = { name, email, message, _subject: `SIMSENblog: message from ${name}` };
+    if (form.dataset.web3formsKey) {
+      Object.assign(payload, { access_key: form.dataset.web3formsKey, subject: payload._subject, from_name: 'SIMSENblog contact form', botcheck: '' });
+    } else {
+      Object.assign(payload, { _replyto: email, _gotcha: '' });
+    }
+
+    sendBtn.disabled = true;
+    say('Sending…');
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset(); newSum();
+      say("Thanks! Your message is on its way. I'll get back to you.", 'ok');
+    } catch {
+      say(`Sorry, the message couldn't be sent. Please try again, or reach me on LinkedIn: ${linkedin}`, 'error');
+    } finally {
+      sendBtn.disabled = false;
+    }
+  });
+</script>

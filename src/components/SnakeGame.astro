@@ -1,0 +1,294 @@
+---
+/**
+ * Patch Rollout: a small snake game for the Tools page header.
+ * The deployment ring moves across the grid enrolling devices; each one adds a segment.
+ * Arrow keys / WASD, or swipe on touch screens. Self-playing demo until someone interacts.
+ */
+---
+
+<div class="game">
+  <div class="game-hud" aria-hidden="true">
+    <span class="game-title">PATCH ROLLOUT</span>
+    <span class="game-hint" id="snakeHint">Demo · click to play</span>
+    <span class="game-score" id="snakeScore"></span>
+  </div>
+  <canvas
+    id="snakeGame"
+    class="no-touch-scroll"
+    tabindex="0"
+    role="application"
+    aria-label="Patch Rollout mini game. Click to start, then steer with the arrow keys or W A S D, or swipe on touch screens. Enroll devices without hitting the walls or your own rollout."
+  ></canvas>
+  <span class="sr-only" id="snakeStatus" role="status"></span>
+</div>
+
+<script>
+  type Cell = { x: number; y: number };
+  type Dir = { x: number; y: number };
+
+  const C = {
+    grid: 'rgba(84,127,255,0.06)',
+    body: '#547fff',
+    bodyEnd: '#2b3f7a',
+    head: '#9ab4ff',
+    device: '#5bd68f',
+    crash: '#ff6b7a',
+    wall: '#252b3b',
+  };
+  const DIRS: Record<string, Dir> = {
+    ArrowUp: { x: 0, y: -1 }, KeyW: { x: 0, y: -1 },
+    ArrowDown: { x: 0, y: 1 }, KeyS: { x: 0, y: 1 },
+    ArrowLeft: { x: -1, y: 0 }, KeyA: { x: -1, y: 0 },
+    ArrowRight: { x: 1, y: 0 }, KeyD: { x: 1, y: 0 },
+  };
+
+  const canvas = document.querySelector<HTMLCanvasElement>('#snakeGame')!;
+  const ctx = canvas.getContext('2d')!;
+  const hint = document.querySelector<HTMLElement>('#snakeHint')!;
+  const scoreEl = document.querySelector<HTMLElement>('#snakeScore')!;
+  const status = document.querySelector<HTMLElement>('#snakeStatus')!;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = matchMedia('(pointer: coarse)').matches;
+
+  const TOP = 30; // room for the HUD
+  let W = 0, H = 0, cell = 14, cols = 0, rows = 0, ox = 0, oy = 0, prevCols = -1, prevRows = -1;
+  let snake: Cell[] = [];
+  let dir: Dir = { x: 1, y: 0 };
+  let queue: Dir[] = [];
+  let food: Cell = { x: 0, y: 0 };
+  let mode: 'demo' | 'play' | 'over' = 'demo';
+  let score = 0, best = 0, stepAcc = 0, lastInput = 0, clock = 0, crashT = 0, eatT = 0;
+  let visible = true, running = false, last = 0;
+
+  try { best = Number(localStorage.getItem('patchRolloutBest')) || 0; } catch {}
+
+  const key = (c: Cell) => c.y * 1000 + c.x;
+
+  function layout() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = rect.width; H = rect.height;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cell = W < 500 ? 11 : 13; // smaller cells give more rows in the slim panel
+    cols = Math.max(12, Math.floor((W - 16) / cell));
+    rows = Math.max(5, Math.floor((H - TOP - 10) / cell));
+    ox = Math.floor((W - cols * cell) / 2);
+    oy = TOP + Math.floor((H - TOP - 6 - rows * cell) / 2);
+    // Only restart when the grid itself changed size.
+    if (cols !== prevCols || rows !== prevRows) {
+      prevCols = cols; prevRows = rows;
+      reset(mode === 'play' ? 'play' : 'demo');
+    }
+    draw();
+  }
+
+  function reset(next: 'demo' | 'play') {
+    mode = next;
+    const y = Math.floor(rows / 2);
+    const x = Math.min(6, Math.floor(cols / 3));
+    snake = [{ x, y }, { x: x - 1, y }, { x: x - 2, y }, { x: x - 3, y }];
+    dir = { x: 1, y: 0 };
+    queue = [];
+    score = 0;
+    crashT = 0;
+    placeFood();
+  }
+
+  function placeFood() {
+    const taken = new Set(snake.map(key));
+    const free: Cell[] = [];
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) if (!taken.has(y * 1000 + x)) free.push({ x, y });
+    food = free[Math.floor(Math.random() * free.length)] ?? { x: 0, y: 0 };
+  }
+
+  const blocked = (c: Cell, body = snake) =>
+    c.x < 0 || c.y < 0 || c.x >= cols || c.y >= rows || body.slice(0, -1).some((s) => s.x === c.x && s.y === c.y);
+
+  // Demo driver: head for the device, never reverse, avoid immediate crashes, prefer open space.
+  function demoTurn() {
+    const h = snake[0];
+    const options = [dir, { x: dir.y, y: -dir.x }, { x: -dir.y, y: dir.x }]
+      .map((d) => ({ d, n: { x: h.x + d.x, y: h.y + d.y } }))
+      .filter((o) => !blocked(o.n));
+    if (!options.length) return;
+    const space = (c: Cell) => [[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => !blocked({ x: c.x + dx, y: c.y + dy })).length;
+    options.sort((a, b) => {
+      const da = Math.abs(a.n.x - food.x) + Math.abs(a.n.y - food.y) - space(a.n) * 0.6;
+      const db = Math.abs(b.n.x - food.x) + Math.abs(b.n.y - food.y) - space(b.n) * 0.6;
+      return da - db;
+    });
+    dir = options[0].d;
+  }
+
+  function step() {
+    if (mode === 'demo') demoTurn();
+    else if (queue.length) dir = queue.shift()!;
+
+    const h = snake[0];
+    const next = { x: h.x + dir.x, y: h.y + dir.y };
+    const eating = next.x === food.x && next.y === food.y;
+    const bodyToCheck = eating ? [...snake, snake[snake.length - 1]] : snake;
+
+    if (blocked(next, bodyToCheck)) {
+      if (mode === 'play') {
+        mode = 'over';
+        crashT = 1;
+        if (score > best) {
+          best = score;
+          try { localStorage.setItem('patchRolloutBest', String(best)); } catch {}
+        }
+        status.textContent = `Rollout failed. ${score} devices enrolled. Best ${best}.`;
+      } else {
+        reset('demo');
+      }
+      return;
+    }
+
+    snake.unshift(next);
+    if (eating) {
+      score++;
+      eatT = 0.25;
+      placeFood();
+    } else {
+      snake.pop();
+    }
+  }
+
+  function update(dt: number) {
+    clock += dt;
+    crashT = Math.max(0, crashT - dt);
+    eatT = Math.max(0, eatT - dt);
+
+    if (mode === 'over') {
+      if (clock - lastInput > 15) reset('demo');
+    } else {
+      if (mode === 'play' && clock - lastInput > 20) reset('demo');
+      const speed = mode === 'play' ? Math.min(15, 7 + score * 0.35) : 11;
+      stepAcc += dt * speed;
+      while (stepAcc >= 1) { stepAcc -= 1; step(); if (mode === 'over') break; }
+    }
+
+    if (mode === 'demo') hint.textContent = touch ? 'Demo · tap to play' : 'Demo · click to play';
+    else if (mode === 'play') hint.textContent = touch ? 'Swipe to steer' : 'Arrow keys or WASD';
+    else hint.textContent = touch ? 'Rollout failed · tap to retry' : 'Rollout failed · click or press a key';
+    scoreEl.textContent = mode === 'demo' ? (best ? `Best ${best}` : '') : `Enrolled ${score} · Best ${Math.max(best, score)}`;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid
+    ctx.fillStyle = C.grid;
+    for (let y = 0; y <= rows; y++) for (let x = 0; x <= cols; x++) ctx.fillRect(ox + x * cell - 0.75, oy + y * cell - 0.75, 1.5, 1.5);
+
+    // Device to enroll
+    const fx = ox + food.x * cell, fy = oy + food.y * cell, pad = 2.5;
+    ctx.save();
+    ctx.strokeStyle = C.device;
+    ctx.fillStyle = 'rgba(91,214,143,0.15)';
+    ctx.shadowColor = C.device;
+    ctx.shadowBlur = 8;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.roundRect(fx + pad, fy + pad, cell - pad * 2, cell - pad * 2 - 2.5, 1.5); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(fx + 1.5, fy + cell - 2.5); ctx.lineTo(fx + cell - 1.5, fy + cell - 2.5); ctx.stroke();
+    ctx.restore();
+
+    // Rollout (snake)
+    const n = snake.length;
+    snake.forEach((s, i) => {
+      const t = n > 1 ? i / (n - 1) : 0;
+      const inset = i === 0 ? 1 : 1.5 + t * 1.5;
+      ctx.fillStyle = crashT > 0 ? C.crash : i === 0 ? C.head : mix(C.body, C.bodyEnd, t);
+      if (i === 0) { ctx.shadowColor = crashT > 0 ? C.crash : C.body; ctx.shadowBlur = eatT > 0 ? 14 : 8; }
+      ctx.beginPath();
+      ctx.roundRect(ox + s.x * cell + inset, oy + s.y * cell + inset, cell - inset * 2, cell - inset * 2, 3);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // Head "eyes" pointing in the direction of travel
+    const h = snake[0];
+    if (h) {
+      ctx.fillStyle = '#0d101c';
+      const cx = ox + h.x * cell + cell / 2, cy = oy + h.y * cell + cell / 2;
+      const px = -dir.y, py = dir.x;
+      for (const side of [-1, 1]) {
+        ctx.beginPath();
+        ctx.arc(cx + dir.x * 2.5 + px * side * 2.6, cy + dir.y * 2.5 + py * side * 2.6, 1.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  function mix(a: string, b: string, t: number) {
+    const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
+    const ch = (s: number) => Math.round(((pa >> s) & 255) * (1 - t) + ((pb >> s) & 255) * t);
+    return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+  }
+
+  function frame(now: number) {
+    if (!running) return;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  function start() {
+    if (running) return;
+    if (reducedMotion && mode === 'demo') { draw(); return; }
+    running = true;
+    last = performance.now();
+    requestAnimationFrame(frame);
+  }
+  function stop() { running = false; }
+  function sync() { (visible && !document.hidden ? start : stop)(); }
+
+  function begin() {
+    lastInput = clock;
+    if (mode !== 'play') { reset('play'); stepAcc = 0; }
+    start();
+  }
+
+  function turn(d: Dir) {
+    lastInput = clock;
+    if (mode !== 'play') { begin(); }
+    const lastDir = queue[queue.length - 1] ?? dir;
+    if (d.x === -lastDir.x && d.y === -lastDir.y) return; // no reversing into yourself
+    if (d.x === lastDir.x && d.y === lastDir.y) return;
+    if (queue.length < 3) queue.push(d);
+  }
+
+  // Keyboard: only while the game has focus, so arrow keys still scroll the page otherwise.
+  canvas.addEventListener('keydown', (ev) => {
+    const d = DIRS[ev.code];
+    if (d) { ev.preventDefault(); turn(d); }
+    else if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); if (mode !== 'play') begin(); }
+  });
+
+  // Pointer: click/tap starts; swipe steers.
+  let down: { x: number; y: number } | null = null;
+  canvas.addEventListener('pointerdown', (ev) => {
+    canvas.focus({ preventScroll: true });
+    down = { x: ev.clientX, y: ev.clientY };
+    if (mode !== 'play') begin();
+    else lastInput = clock;
+  });
+  canvas.addEventListener('pointermove', (ev) => {
+    if (!down || mode !== 'play') return;
+    const dx = ev.clientX - down.x, dy = ev.clientY - down.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return;
+    turn(Math.abs(dx) > Math.abs(dy) ? { x: Math.sign(dx), y: 0 } : { x: 0, y: Math.sign(dy) });
+    down = { x: ev.clientX, y: ev.clientY };
+  });
+  addEventListener('pointerup', () => (down = null));
+
+  new ResizeObserver(layout).observe(canvas);
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(canvas);
+  document.addEventListener('visibilitychange', sync);
+
+  layout();
+  sync();
+</script>

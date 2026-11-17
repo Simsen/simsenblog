@@ -1,0 +1,184 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import LinkGame from '../components/LinkGame.astro';
+import { SITE } from '../lib/site';
+
+// Content from https://www.simsenblog.dk/links/ (same URL, so old links keep working).
+type Price = 'Free' | 'Paid' | 'Freemium';
+interface Link { name: string; url: string; price: Price; text: string; extra?: { label: string; url: string }[] }
+
+const groups: { id: string; icon: string; title: string; links: Link[] }[] = [
+  {
+    id: 'troubleshooting',
+    icon: '>_',
+    title: 'Troubleshooting',
+    links: [
+      {
+        name: 'CMTrace',
+        url: `${SITE.legacy}/cmtrace.exe`,
+        price: 'Free',
+        text: 'The log reader I use for troubleshooting on any client. Hosted here for a quick download.',
+      },
+    ],
+  },
+  {
+    id: 'community',
+    icon: '◎',
+    title: 'Community',
+    links: [
+      {
+        name: 'Awesome Intune',
+        url: 'https://www.awesomeintune.com',
+        price: 'Free',
+        text: 'A directory of 155+ community tools and scripts, security-scanned and searchable by the problem you have.',
+      },
+      {
+        name: 'OnlyIntuneFans',
+        url: 'https://www.onlyintunefans.com',
+        price: 'Free',
+        text: 'Community blogs and Microsoft docs in one Intune news feed, with no algorithm deciding what you see.',
+      },
+    ],
+  },
+  {
+    id: 'deployment',
+    icon: '⏏',
+    title: 'Deployment and packaging',
+    links: [
+      {
+        name: 'Patch My PC',
+        url: 'https://patchmypc.com/',
+        price: 'Paid',
+        text: 'Third-party app patching for Intune.',
+        extra: [
+          { label: 'Roadmap', url: 'https://patchmypc.com/roadmap' },
+          { label: 'Request an app', url: 'https://patchmypc.com/request-catalog-application' },
+        ],
+      },
+      {
+        name: 'PSAppDeployToolkit',
+        url: 'https://psappdeploytoolkit.com/',
+        price: 'Free',
+        text: 'A wrapper for complex installs, with user prompts, deferrals and logging.',
+      },
+      {
+        name: 'Win32 Content Prep Tool',
+        url: 'https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool',
+        price: 'Free',
+        text: "Microsoft's tool for packaging installers as .intunewin files.",
+      },
+      {
+        name: 'Registry to PowerShell converter',
+        url: 'https://www.systanddeploy.com/2018/03/registry-to-powershell-converter.html',
+        price: 'Free',
+        text: 'Turns .reg exports into PowerShell, ready to use as a remediation.',
+      },
+    ],
+  },
+  {
+    id: 'admin',
+    icon: '◈',
+    title: 'Local admin privilege',
+    links: [
+      {
+        name: 'Admin By Request',
+        url: 'https://www.adminbyrequest.com/',
+        price: 'Freemium',
+        text: 'Removes local admin rights and gives users audited elevation when they need it.',
+      },
+      {
+        name: 'macOS Enterprise Privileges',
+        url: 'https://github.com/SAP/macOS-enterprise-privileges',
+        price: 'Free',
+        text: "SAP's tool for managing elevated privileges on macOS.",
+      },
+    ],
+  },
+  {
+    id: 'reference',
+    icon: '⌗',
+    title: 'Reference and maps',
+    links: [
+      {
+        name: 'Microsoft Cloud command line',
+        url: 'https://cmd.ms/',
+        price: 'Free',
+        text: 'Short URLs that open any admin portal blade directly.',
+      },
+      { name: 'M365 Maps', url: 'https://m365maps.com/', price: 'Free', text: 'Shows which licenses include which features.' },
+      {
+        name: 'IntuneMaps.com',
+        url: 'https://intunemaps.com/',
+        price: 'Free',
+        text: 'A visual map of the Intune portal, with every node linked to Microsoft Learn.',
+      },
+    ],
+  },
+];
+
+const host = (url: string) => new URL(url).hostname.replace(/^www\./, '');
+---
+
+<BaseLayout
+  title="Links"
+  description="The tools and sites Simon Hartmann Eriksen actually uses in endpoint projects: troubleshooting, community, packaging, admin privileges and reference maps."
+  active="links"
+>
+  <section class="hero hero-compact">
+    <LinkGame />
+  </section>
+
+  <div class="home-layout page-layout">
+    <div class="page-main">
+      <header class="page-head">
+        <div class="eyebrow">Links</div>
+        <h1>Tools I actually <span>reach for.</span></h1>
+        <p class="page-lead">A short list of tools and sites I use in real endpoint projects. Not sponsored, just useful.</p>
+      </header>
+
+      <nav class="link-jump" aria-label="Sections on this page">
+        {groups.map((g) => <a href={`#${g.id}`}>{g.title}</a>)}
+      </nav>
+
+      {
+        groups.map((g) => (
+          <section class="link-group" id={g.id} aria-labelledby={`${g.id}-heading`}>
+            <h2 id={`${g.id}-heading`}>
+              <span class="tool-icon tool-icon-sm" aria-hidden="true">{g.icon}</span>
+              {g.title}
+            </h2>
+            <ul class="link-grid">
+              {g.links.map((l) => (
+                <li class="link-card">
+                  <div class="link-card-top">
+                    <a class="link-name" href={l.url}>
+                      {l.name} <span aria-hidden="true">↗</span>
+                    </a>
+                    <span class:list={['link-price', l.price.toLowerCase()]}>{l.price}</span>
+                  </div>
+                  <p>{l.text}</p>
+                  <div class="link-meta">
+                    <span>{host(l.url)}</span>
+                    {l.extra?.map((x) => <a href={x.url}>{x.label} ↗</a>)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+
+      <section class="tool-feedback">
+        <div>
+          <h2>Missing something?</h2>
+          <p>If there's a tool you can't work without, tell me. I'm always looking for the next one.</p>
+        </div>
+        <div class="tool-feedback-links">
+          <a class="button" href="/about/#contact">Suggest a link →</a>
+        </div>
+      </section>
+    </div>
+    <Sidebar show="posts" />
+  </div>
+</BaseLayout>

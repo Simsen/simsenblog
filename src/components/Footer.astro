@@ -1,0 +1,11 @@
+---
+import { SITE } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>SIMSENblog is owned and maintained by <a href="/about/">{SITE.author}</a></span>
+    <span>© {year} · <a href={SITE.github}>Source on GitHub</a></span>
+  </div>
+</footer>

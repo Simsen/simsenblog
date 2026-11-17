@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import ShipGame from '../components/ShipGame.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SITE } from '../lib/site';
+
+// Content from https://www.simsenblog.dk/about/ (draft for the new site).
+const stats = [
+  { value: '20', unit: 'years', label: 'in IT, starting in software packaging' },
+  { value: '7', unit: 'years', label: 'moving customers to modern management' },
+  { value: '40.000+', unit: 'clients', label: 'in the largest fleets I work with' },
+];
+
+const focus = [
+  {
+    icon: '⊞',
+    title: 'Windows endpoint management',
+    text: 'Autopilot, cloud-native join, security baselines, Autopatch and ring-based rollout that survives contact with real users.',
+  },
+  {
+    icon: '⌘',
+    title: 'Mac management with Intune',
+    text: "Apple Business Manager, configuration profiles, Platform SSO and the parts of macOS management that don't transfer from Windows.",
+  },
+  {
+    icon: '◈',
+    title: 'Zero Trust and endpoint security',
+    text: 'Compliance, Conditional Access and Defender for Endpoint working as one layered model — plus PAW for tiered admin.',
+  },
+  {
+    icon: '☁',
+    title: 'Cloud desktops',
+    text: 'Windows 365 Cloud PC and Azure Virtual Desktop, managed from the same platform as everything else.',
+  },
+];
+
+const talks = [
+  { year: 2026, title: 'Endpoint DLP in the Real World: Why Device Management Comes First', with: 'Kasper Nørregaard', event: 'Experts Live Denmark · September Meetup' },
+  { year: 2026, title: 'Mac Management with Intune and Passwordless', event: 'Workplace Ninja Denmark · May session, online' },
+  { year: 2025, title: "We Applied the Security Baseline — Are We Safe Now? (Spoiler: No, You're Not)", with: 'Jesper Hanno Hansen', event: 'BSides · Denmark' },
+  { year: 2025, title: 'Top 10 Community Tools for macOS', with: 'Ugur Koc', event: 'Workplace Ninja Summit · Baden, Switzerland' },
+  { year: 2025, title: 'Mac Management with Intune', event: 'Expert Live · Denmark' },
+  { year: 2025, title: 'Ask Me Anything: Intune, Azure Virtual Desktop, Windows 365', event: 'Expert Live · Denmark' },
+  { year: 2025, title: 'macOS Management with Intune and Platform SSO', event: 'Apple HQ · Denmark' },
+  { year: 2024, title: 'Secure Remote Access and Endpoint Privilege Management', event: 'Expert Live · Denmark' },
+];
+const years = [...new Set(talks.map((t) => t.year))];
+---
+
+<BaseLayout
+  title="About"
+  description="Simon Hartmann Eriksen: Senior Security Architect at Vaern and Microsoft MVP in Intune. Windows and Mac management, Zero Trust and endpoint security."
+  active="about"
+>
+  <section class="hero hero-compact">
+    <ShipGame />
+  </section>
+
+  <div class="home-layout page-layout">
+    <div class="page-main about">
+      <header class="about-intro">
+        <div class="about-id">
+          <img class="author-photo about-photo" src="/images/simon-portrait.png" alt={SITE.author} width="92" height="107" tabindex="0" />
+          <div>
+            <div class="eyebrow">About</div>
+            <h1>{SITE.author}</h1>
+            <p class="about-role">Senior Security Architect at Vaern · <span>Microsoft MVP in Intune</span></p>
+          </div>
+        </div>
+        <div class="about-text">
+          <p class="about-lead">
+            I design and run cloud-native endpoint platforms for organisations that have to make Intune work on Monday morning, not in a lab.
+          </p>
+          <p>
+            Twenty years in IT, starting in software packaging. For the last seven I've worked almost entirely on moving customers from
+            traditional to modern management, with Intune as the primary tool — and more recently on Mac management, because the
+            cross-platform question now comes up in every project. Fleets from small businesses up to 40.000+ clients.
+          </p>
+          <p>
+            Security isn't a separate workstream in what I do. Defender for Endpoint is standard in my projects, Zero Trust principles shape
+            the designs rather than decorate them, and I've built a fair number of Privileged Access Workstation setups in Intune for tiered
+            environments.
+          </p>
+          <p>
+            This blog is where the parts worth keeping end up: the settings that matter, the ones that quietly break things, and the scripts
+            I got tired of rewriting. Everything here has been through a real environment first.
+          </p>
+        </div>
+      </header>
+
+      <ul class="about-stats" aria-label="In numbers">
+        {
+          stats.map((s) => (
+            <li>
+              <strong>{s.value}</strong> <span>{s.unit}</span>
+              <small>{s.label}</small>
+            </li>
+          ))
+        }
+      </ul>
+
+      <section class="about-section" aria-labelledby="focus-heading">
+        <h2 id="focus-heading">Focus areas</h2>
+        <div class="focus-grid">
+          {
+            focus.map((f) => (
+              <article class="focus-card">
+                <span class="tool-icon tool-icon-sm" aria-hidden="true">{f.icon}</span>
+                <h3>{f.title}</h3>
+                <p>{f.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="about-section" aria-labelledby="talks-heading">
+        <h2 id="talks-heading">Speaker at</h2>
+        <div class="talks">
+          {
+            years.map((y) => (
+              <div class="talk-year">
+                <div class="talk-year-label">{y}</div>
+                <ul>
+                  {talks
+                    .filter((t) => t.year === y)
+                    .map((t) => (
+                      <li>
+                        <strong>{t.title}</strong>
+                        <small>
+                          {t.event}
+                          {t.with && <Fragment> · with {t.with}</Fragment>}
+                        </small>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="about-contact" id="contact" aria-labelledby="contact-heading">
+        <div class="about-contact-head">
+          <div>
+            <h2 id="contact-heading">Get in touch</h2>
+            <p>Questions about a post, a talk for your event, or something that broke in Intune? Write to me here, or find me on social media.</p>
+          </div>
+          <SocialLinks />
+        </div>
+        <ContactForm />
+      </section>
+    </div>
+    <Sidebar show="posts" />
+  </div>
+</BaseLayout>

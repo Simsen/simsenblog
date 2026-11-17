@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import RingGame from '../components/RingGame.astro';
+
+// Content from https://www.simsenblog.dk/course/ (same URL, so old links keep working).
+const courses = [
+  {
+    id: 'autopilot',
+    icon: '⊞',
+    name: 'Modern Management and Windows Autopilot',
+    tagline: 'From the first Autopilot profile to a fleet that onboards, patches and secures itself.',
+    chips: ['Rated 4.75 / 5', '1 day', 'DKK 6.500', 'Danish · English on request', 'Copenhagen or on-site'],
+    audience:
+      'IT administrators, support technicians and system architects. Working knowledge of Windows 10/11, policies and PowerShell helps. Intune, Defender and Entra ID are taught in the course.',
+    topics: [
+      'Modern Management and Autopilot fundamentals',
+      'End-to-end Autopilot setup and configuration',
+      'Integrating Microsoft Defender for Endpoint',
+      'Patch management strategies',
+      "Policies and security settings that don't disrupt users",
+      'Application deployment',
+      'Troubleshooting Windows onboarding and app deployment',
+    ],
+    quote: "It matters a lot that it isn't just an instructor running a course…",
+    booking: 'https://globeteam.com/kurser/modern-management-og-windows-autopilot/',
+  },
+  {
+    id: 'mac',
+    icon: '⌘',
+    name: 'Mac Management with Microsoft Intune',
+    tagline: 'Bring Macs into a Microsoft-managed environment without treating them like Windows.',
+    chips: ['Rated 5 / 5', '1 day', 'DKK 6.500', 'Danish · English on request', 'Copenhagen or on-site'],
+    audience:
+      'IT administrators, technical support staff and system architects bringing Apple devices into a Microsoft-managed environment. Working knowledge of Intune is assumed.',
+    topics: [
+      'How Mac management in Intune differs from Windows',
+      'Baseline setup and configuration of Macs',
+      'Application deployment on macOS',
+      'Mac-specific security strategies',
+      'Compliance and policy management',
+      'User experience for Mac users',
+      'Advanced troubleshooting and support',
+    ],
+    quote: 'Good and very instructive course…',
+    booking: 'https://globeteam.com/kurser/mac-management-intune/',
+  },
+];
+
+const practical = [
+  { label: 'Venue', value: 'Emdrupvej 26B, 2100 Copenhagen Ø, or at your own offices' },
+  { label: 'Schedule', value: '09:00–16:00, breakfast from 08:30' },
+  { label: 'Included', value: 'Lunch and refreshments' },
+  { label: 'Group size', value: 'Kept small, so there is room for hands-on discussion' },
+  { label: 'Price', value: 'DKK 6.500 per participant, excluding VAT. In-house is priced on request.' },
+];
+---
+
+<BaseLayout
+  title="Courses"
+  description="One-day courses with Simon Hartmann Eriksen: Modern Management and Windows Autopilot, and Mac Management with Microsoft Intune. Built from real migration projects."
+  active="courses"
+>
+  <section class="hero hero-compact">
+    <RingGame />
+  </section>
+
+  <div class="home-layout page-layout">
+    <div class="page-main">
+      <header class="page-head">
+        <div class="eyebrow">Courses</div>
+        <h1>Learn it from <span>real migrations.</span></h1>
+        <p class="page-lead">
+          Two one-day courses on modern endpoint management. Both are built from projects I've run, so the day covers what actually
+          happens when you roll it out, not just what the documentation says.
+        </p>
+      </header>
+
+      <nav class="tool-index course-index" aria-label="Courses on this page">
+        {
+          courses.map((c) => (
+            <a href={`#${c.id}`}>
+              <span class="tool-icon tool-icon-sm" aria-hidden="true">{c.icon}</span>
+              <span>
+                <strong>{c.name}</strong>
+                <small>{c.chips.slice(1, 3).join(' · ')}</small>
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="tool-list">
+        {
+          courses.map((c) => (
+            <section class="tool-card" id={c.id} aria-labelledby={`${c.id}-name`}>
+              <div class="tool-card-head">
+                <span class="tool-icon" aria-hidden="true">{c.icon}</span>
+                <div>
+                  <h2 id={`${c.id}-name`}>{c.name}</h2>
+                  <p class="tool-tagline">{c.tagline}</p>
+                </div>
+              </div>
+              <ul class="tool-chips" aria-label="Details">
+                {c.chips.map((chip) => <li>{chip}</li>)}
+              </ul>
+
+              <div class="tool-body">
+                <div>
+                  <h3 class="course-subhead">Who it's for</h3>
+                  <p class="tool-intro">{c.audience}</p>
+                  <blockquote class="course-quote">
+                    <p>“{c.quote}”</p>
+                    <cite>Previous participant, translated from Danish</cite>
+                  </blockquote>
+                </div>
+                <div class="tool-features">
+                  <h3>What we cover</h3>
+                  <ul>
+                    {c.topics.map((t) => <li>{t}</li>)}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="tool-actions">
+                <a class="button primary" href={c.booking}>Dates and booking at GlobeAcademy ↗</a>
+                <a class="button" href="/about/#contact">Ask about this course →</a>
+              </div>
+            </section>
+          ))
+        }
+      </div>
+
+      <section class="about-section" aria-labelledby="practical-heading">
+        <h2 id="practical-heading">Practical details</h2>
+        <dl class="course-facts">
+          {
+            practical.map((p) => (
+              <div>
+                <dt>{p.label}</dt>
+                <dd>{p.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section class="tool-feedback">
+        <div>
+          <h2>Want it in-house?</h2>
+          <p>
+            Both courses can run at your place, built around your own tenant, your constraints and the migration you're in the
+            middle of.
+          </p>
+        </div>
+        <div class="tool-feedback-links">
+          <a class="button" href="/about/#contact">Get in touch →</a>
+        </div>
+      </section>
+    </div>
+    <Sidebar show="posts" />
+  </div>
+</BaseLayout>
