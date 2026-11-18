@@ -468,6 +468,27 @@
   /* Old WordPress posts that put text beside an image in a table */
   .article-body .layout-table td { border: 0; padding: 0 16px 0 0; vertical-align: top; }
   .article-body .layout-table img { max-width: 260px; margin: 0; }
+  /* Lightbox (scripts/lightbox.ts) */
+  .article-body img.zoomable, .gallery-stage img { cursor: zoom-in; }
+  .article-body img.zoomable:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  html.lightbox-open { overflow: hidden; }
+  .lightbox { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 56px 24px 20px; border: 0; background: transparent; color: var(--text); overflow: hidden; }
+  .lightbox[open] { display: grid; place-items: center; }
+  .lightbox::backdrop { background: rgb(6 8 15 / .96); backdrop-filter: blur(6px); }
+  .lightbox-figure { margin: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; justify-items: center; width: 100%; height: 100%; min-height: 0; }
+  .lightbox-img { min-height: 0; max-width: 100%; max-height: 100%; width: auto; height: auto; align-self: center; object-fit: contain; border-radius: 6px; cursor: default; touch-action: pan-y; }
+  .lightbox-bar { display: flex; align-items: center; gap: 12px; width: min(100%, 900px); }
+  .lightbox-caption { flex: 1; min-width: 0; font-size: 14px; line-height: 1.5; color: var(--light); text-align: center; }
+  .lightbox-count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .lightbox-btn, .lightbox-close { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 8px; border: 1px solid var(--border); background: #171f32; color: var(--light); font-size: 24px; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: border-color .15s, background .15s; }
+  .lightbox-close { position: absolute; top: 10px; right: 14px; font-size: 18px; }
+  .lightbox-btn:hover, .lightbox-close:hover { border-color: #455d95; background: #1a2540; }
+  .lightbox-btn:focus-visible, .lightbox-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .lightbox-bar .lightbox-btn[data-step="1"] { order: 3; }
+  .lightbox-bar .lightbox-count { order: 2; }
+  .lightbox.single .lightbox-btn { visibility: hidden; }
+  @media (max-width: 620px) { .lightbox { padding: 56px 10px 14px; } .lightbox-bar { gap: 8px; } .lightbox-caption { font-size: 13px; } }
+
   .article-body video { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 8px; margin: 8px 0 24px; background: #000; }
   .article-body th, .article-body td { border-bottom: 1px solid var(--border); padding: 9px 10px; text-align: left; }
   .article-body th { color: var(--text); }

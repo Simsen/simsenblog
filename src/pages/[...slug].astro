@@ -133,7 +133,9 @@ const primaryLinks = project?.links ?? [];
 
 <script>
   import { initGalleries } from '../scripts/gallery';
+  import { initLightbox } from '../scripts/lightbox';
   initGalleries();
+  initLightbox();
 
   const bar = document.querySelector<HTMLElement>('.reading-progress');
   function updateProgress() {

@@ -62,6 +62,8 @@ Write the steps here.
   ```html
   <div class="note"><strong>Good to know</strong>Text of the callout.</div>
   ```
+- Images that show smaller than their file get a lightbox automatically: click to see them full size, with ‹ › through
+  all the post's images (gallery images included). Images inside a link keep the link instead.
 - Step-by-step gallery (one image at a time, with ‹ ›, counter, arrow keys and swipe). Put the images in
   `public/images/posts/<post-file-name>/` and write one `<figure>` per image. Keep the lines together, with
   no blank lines inside the `<div>`:

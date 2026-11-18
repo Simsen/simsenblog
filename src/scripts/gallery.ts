@@ -54,12 +54,19 @@ export function initGalleries(root: ParentNode = document) {
       else if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
     });
 
-    // Swipe on touch screens.
-    let startX = 0, startY = 0;
-    stage.addEventListener('pointerdown', (e) => { startX = e.clientX; startY = e.clientY; });
+    // Swipe on touch screens. A swipe isn't a click, so it doesn't open the lightbox.
+    let startX = 0, startY = 0, swiped = false;
+    stage.addEventListener('pointerdown', (e) => { startX = e.clientX; startY = e.clientY; swiped = false; });
     stage.addEventListener('pointerup', (e) => {
       const dx = e.clientX - startX, dy = e.clientY - startY;
-      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) show(index + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { swiped = true; show(index + (dx < 0 ? 1 : -1)); }
+    });
+    stage.addEventListener('click', (e) => { if (swiped) { e.stopPropagation(); swiped = false; } }, { capture: true });
+
+    // The lightbox (scripts/lightbox.ts) leaves the gallery on the image you last looked at.
+    gallery.addEventListener('gallery:show', (e) => {
+      const i = figures.findIndex((f) => f.contains((e as CustomEvent<Element>).detail));
+      if (i >= 0) show(i);
     });
 
     show(0);
