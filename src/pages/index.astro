@@ -41,6 +41,7 @@ const posts = await getPosts();
     <div class="interactive-posts">
       {posts.map((post, i) => <PostRow post={post} index={i} />)}
     </div>
+    <button class="button show-more" id="showMore" type="button" hidden>Show more posts</button>
     <p class="empty" id="empty" hidden>No articles match. Try another topic or search.</p>
     <span class="result-status" id="resultStatus" role="status"></span>
   </section>
@@ -55,7 +56,13 @@ const posts = await getPosts();
   const cards = [...document.querySelectorAll<HTMLElement>('.expanding-post')];
   const empty = document.querySelector<HTMLElement>('#empty')!;
   const status = document.querySelector<HTMLElement>('#resultStatus')!;
+  const showMore = document.querySelector<HTMLButtonElement>('#showMore')!;
   let category = 'all';
+
+  // The list starts with the newest posts; "Show more posts" adds the next batch.
+  // Searching always shows every match.
+  const PAGE = 10;
+  let limit = PAGE;
 
   // Only one preview is expanded at a time.
   function expandPost(card: HTMLElement | undefined) {
@@ -80,26 +87,43 @@ const posts = await getPosts();
     const query = search.value.trim().toLowerCase();
     // Every word must appear somewhere, in any order: "silent bitlocker" finds "BitLocker silent encryption".
     const words = query.split(/\s+/).filter(Boolean);
-    let shown = 0;
+    let matched = 0, shown = 0;
     cards.forEach((card) => {
       const inCategory = category === 'all' || card.dataset.categories!.split(' ').includes(category);
       const matches = inCategory && words.every((w) => card.dataset.search!.includes(w));
-      card.hidden = !matches;
-      if (matches) shown++;
+      const visible = matches && (words.length > 0 || matched < limit);
+      if (matches) matched++;
+      card.hidden = !visible;
+      if (visible) shown++;
     });
-    empty.hidden = shown !== 0;
-    status.textContent = query || category !== 'all' ? `${shown} matching article${shown === 1 ? '' : 's'}.` : '';
+    const remaining = matched - shown;
+    showMore.hidden = remaining <= 0;
+    showMore.textContent = `Show more posts (${remaining} more)`;
+    empty.hidden = matched !== 0;
+    status.textContent = query || category !== 'all' ? `${matched} matching article${matched === 1 ? '' : 's'}.` : '';
     reconcilePreview();
   }
 
   filters.forEach((button) =>
     button.addEventListener('click', () => {
       category = button.dataset.category!;
+      limit = PAGE;
       filters.forEach((other) => other.setAttribute('aria-pressed', String(other === button)));
       filterPosts();
     }),
   );
-  search.addEventListener('input', filterPosts);
+  search.addEventListener('input', () => {
+    limit = PAGE;
+    filterPosts();
+  });
+
+  showMore.addEventListener('click', () => {
+    const before = cards.filter((c) => !c.hidden).length;
+    limit += PAGE;
+    filterPosts();
+    // Keyboard users continue from the first newly shown post.
+    cards.filter((c) => !c.hidden)[before]?.querySelector<HTMLElement>('a.post-title')?.focus({ preventScroll: true });
+  });
 
   cards.forEach((card) => {
     // Mouse hover expands after a short 40 ms delay; touch and keyboard use tap / focus.
@@ -126,6 +150,5 @@ const posts = await getPosts();
   const preset = filters.find((f) => f.dataset.category === topic);
   if (params.get('q')) search.value = params.get('q')!;
   if (preset) preset.click();
-  else if (search.value) filterPosts();
-  else expandPost(cards[0]);
+  else filterPosts();
 </script>
