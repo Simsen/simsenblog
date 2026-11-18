@@ -2,25 +2,27 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import EndpointGame from '../components/EndpointGame.astro';
+import InlineScript from '../components/InlineScript.astro';
 import { ICONS } from '../lib/site';
 import { formatDate, fullTitle, getPosts, postPath } from '../lib/posts';
 
 const latest = (await getPosts()).slice(0, 5);
+
+// Old WordPress archive URLs: send them to the matching filter or search on the blog.
+// Inline in <head> so the redirect happens before the 404 page renders.
+const archiveRedirect = String.raw`(() => {
+  const path = location.pathname.toLowerCase();
+  const category = path.match(/^\/category\/([^/]+)\/?/);
+  const tag = path.match(/^\/tag\/([^/]+)\/?/);
+  const author = /^\/author\//.test(path);
+  if (category) location.replace('/?topic=' + encodeURIComponent(category[1]));
+  else if (tag) location.replace('/?q=' + encodeURIComponent(tag[1].replace(/-/g, ' ')));
+  else if (author) location.replace('/about/');
+})();`;
 ---
 
 <BaseLayout title="Page not found" description="This page doesn't exist on SIMSENblog.">
-  <script is:inline slot="head">
-    // Old WordPress archive URLs: send them to the matching filter or search on the blog.
-    (() => {
-      const path = location.pathname.toLowerCase();
-      const category = path.match(/^\/category\/([^/]+)\/?/);
-      const tag = path.match(/^\/tag\/([^/]+)\/?/);
-      const author = /^\/author\//.test(path);
-      if (category) location.replace('/?topic=' + encodeURIComponent(category[1]));
-      else if (tag) location.replace('/?q=' + encodeURIComponent(tag[1].replace(/-/g, ' ')));
-      else if (author) location.replace('/about/');
-    })();
-  </script>
+  <InlineScript slot="head" code={archiveRedirect} />
 
   <section class="hero hero-compact">
     <EndpointGame />
@@ -75,12 +77,12 @@ const latest = (await getPosts()).slice(0, 5);
     <Sidebar show="tools" />
   </div>
 
-  <script is:inline>
+  <script>
     // Prefill the search with words from the missing URL, e.g. /2019/03/bitlocker-silent-encryption/ → "bitlocker silent encryption".
     (() => {
       const slug = location.pathname.split('/').filter(Boolean).pop() || '';
       if (/^[a-z][a-z0-9-]+$/i.test(slug) && slug !== '404') {
-        document.getElementById('notfoundQuery').value = slug.replace(/-/g, ' ').slice(0, 60);
+        (document.getElementById('notfoundQuery') as HTMLInputElement).value = slug.replace(/-/g, ' ').slice(0, 60);
       }
     })();
   </script>

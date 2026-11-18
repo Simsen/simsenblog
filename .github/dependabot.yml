@@ -1,0 +1,19 @@
+# Keeps dependencies patched. Dependabot opens a pull request; merge it to update.
+version: 2
+updates:
+  # The GitHub Actions in .github/workflows (pinned to commit SHAs).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+  # npm packages (Astro, Tailwind). Security fixes come straight away; version bumps once a month.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      npm:
+        patterns: ['*']

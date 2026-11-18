@@ -1,0 +1,16 @@
+---
+/**
+ * A script that must run inline, before the page renders (page transitions, early redirects).
+ * Adds the script's SHA-256 hash to the page's Content Security Policy, so it's allowed to run
+ * while any other inline script (e.g. injected into the page) is blocked.
+ */
+import { createHash } from 'node:crypto';
+
+interface Props {
+  code: string;
+}
+const { code } = Astro.props;
+Astro.csp?.insertScriptHash(`sha256-${createHash('sha256').update(code).digest('base64')}`);
+---
+
+<script is:inline set:html={code} />

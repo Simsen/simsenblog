@@ -18,6 +18,7 @@ const endpoint = CONTACT.formspreeId
   action={endpoint || undefined}
   method="post"
   data-endpoint={endpoint}
+  data-linkedin={SITE.linkedin}
   data-web3forms-key={CONTACT.web3formsKey || undefined}
   novalidate
 >
@@ -52,7 +53,8 @@ const endpoint = CONTACT.formspreeId
   <p class="cf-status" id="cfStatus" role="status" aria-live="polite"></p>
 </form>
 
-<script define:vars={{ linkedin: SITE.linkedin }}>
+<script>
+  const linkedin = (document.getElementById('contactForm') as HTMLFormElement).dataset.linkedin;
   const form = document.getElementById('contactForm');
   const status = document.getElementById('cfStatus');
   const question = document.getElementById('cfQuestion');

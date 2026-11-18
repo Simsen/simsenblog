@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../lib/site';
+import InlineScript from '../components/InlineScript.astro';
 
 interface Props {
   title?: string;
@@ -14,6 +15,33 @@ interface Props {
 const { title, description = SITE.description, active, type = 'website' } = Astro.props;
 const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// Page transitions: match the post box on the frontpage with the article headline box.
+// Inline in <head> so the pageswap/pagereveal listeners exist before the first frame.
+const transitions = String.raw`(() => {
+  const cardFor = (url) => {
+    try {
+      const path = new URL(url, location.href).pathname;
+      return document.querySelector('.expanding-post a.read[href="' + path + '"]')?.closest('.expanding-post');
+    } catch { return null; }
+  };
+  const name = (el) => { if (el) el.style.viewTransitionName = 'post-card'; };
+  const clear = () => document.querySelectorAll('.expanding-post').forEach((el) => (el.style.viewTransitionName = ''));
+  // Leaving the frontpage for an article: the clicked box becomes the headline box.
+  addEventListener('pageswap', (e) => {
+    if (e.viewTransition && e.activation?.entry?.url) name(cardFor(e.activation.entry.url));
+  });
+  // Coming back to the frontpage from an article: the headline box shrinks into its row.
+  addEventListener('pagereveal', (e) => {
+    const from = window.navigation?.activation?.from?.url;
+    if (!e.viewTransition || !from) return;
+    const card = cardFor(from);
+    if (!card) return;
+    name(card);
+    e.viewTransition.finished.finally(clear);
+  });
+  addEventListener('pageshow', (e) => { if (e.persisted) clear(); });
+})();`;
 ---
 
 <!doctype html>
@@ -35,33 +63,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:site_name" content={SITE.title} />
     <meta name="generator" content={Astro.generator} />
     <slot name="head" />
-    <script is:inline>
-      // Page transitions: match the post box on the frontpage with the article headline box.
-      (() => {
-        const cardFor = (url) => {
-          try {
-            const path = new URL(url, location.href).pathname;
-            return document.querySelector('.expanding-post a.read[href="' + path + '"]')?.closest('.expanding-post');
-          } catch { return null; }
-        };
-        const name = (el) => { if (el) el.style.viewTransitionName = 'post-card'; };
-        const clear = () => document.querySelectorAll('.expanding-post').forEach((el) => (el.style.viewTransitionName = ''));
-        // Leaving the frontpage for an article: the clicked box becomes the headline box.
-        addEventListener('pageswap', (e) => {
-          if (e.viewTransition && e.activation?.entry?.url) name(cardFor(e.activation.entry.url));
-        });
-        // Coming back to the frontpage from an article: the headline box shrinks into its row.
-        addEventListener('pagereveal', (e) => {
-          const from = window.navigation?.activation?.from?.url;
-          if (!e.viewTransition || !from) return;
-          const card = cardFor(from);
-          if (!card) return;
-          name(card);
-          e.viewTransition.finished.finally(clear);
-        });
-        addEventListener('pageshow', (e) => { if (e.persisted) clear(); });
-      })();
-    </script>
+    <InlineScript code={transitions} />
   </head>
   <body>
     <slot name="before" />

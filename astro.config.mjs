@@ -26,6 +26,27 @@ export default defineConfig({
       filter: (page) => !page.includes('/category/') && !page.endsWith('/feed/'),
     }),
   ],
+  // Content Security Policy as a <meta> tag (GitHub Pages can't send headers). Astro hashes every
+  // inline script, so only the site's own scripts run; injected scripts are blocked.
+  // Code blocks use inline style="" colours, so styles allow 'unsafe-inline' (no script risk).
+  // Formspree / Web3Forms are allowed so the contact form works once it's configured.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data:",
+        "media-src 'self'",
+        "font-src 'self'",
+        "connect-src 'self' https://formspree.io https://api.web3forms.com",
+        "form-action 'self' https://formspree.io https://api.web3forms.com",
+        "frame-src 'none'",
+        "object-src 'none'",
+        "base-uri 'self'",
+        'upgrade-insecure-requests',
+      ],
+      styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
+    },
+  },
   markdown: {
     shikiConfig: { theme: 'github-dark-dimmed' },
   },
