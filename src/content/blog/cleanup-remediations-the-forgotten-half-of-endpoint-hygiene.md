@@ -5,6 +5,10 @@ date: 2026-05-05
 categories: [Intune, Windows]
 tags: [Intune, Endpoint hygiene]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2290"
+  published: 2026-05-05T04:00:00Z
+  categories: [endpoint-manager, tools]
 ---
 
 We spend months hardening endpoints – baselines, compliance, Conditional Access.  

@@ -5,6 +5,10 @@ date: 2023-05-08
 categories: [Intune, Windows]
 tags: [Intune, Security]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1240"
+  published: 2023-05-08T14:59:16Z
+  categories: [endpoint-manager]
 ---
 
 Have you ever tried using the Security Baseline feature in Intune’s Endpoint Security to enhance your device’s security?

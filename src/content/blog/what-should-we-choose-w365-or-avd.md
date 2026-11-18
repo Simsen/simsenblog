@@ -5,6 +5,10 @@ date: 2023-05-21
 categories: [Windows]
 tags: [Windows 365, AVD]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1261"
+  published: 2023-05-21T21:00:00Z
+  categories: [avd]
 ---
 
 As an IT consultant, I’ve had the privilege to work with various clients, each with their unique set of challenges and requirements. This diverse experience has allowed me to compare and contrast Microsoft’s Windows 365 and Azure Virtual Desktop (AVD) in real-world scenarios. I’ve witnessed these technologies in action, observed their performance, and have seen how they can shape the digital landscapes of businesses. In this post, I’ll share my insights and notes from the field on these two powerful cloud-based solutions.

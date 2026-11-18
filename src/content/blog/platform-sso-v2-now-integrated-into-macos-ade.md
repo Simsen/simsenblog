@@ -5,6 +5,10 @@ date: 2026-05-07
 categories: [Intune, macOS]
 tags: [macOS, Identity]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2304"
+  published: 2026-05-07T15:30:00Z
+  categories: [endpoint-manager, macos]
 ---
 
 Microsoft and Apple just made the macOS onboarding experience a lot cleaner.

@@ -5,6 +5,10 @@ date: 2024-03-24
 categories: [Intune, Windows]
 tags: ["PowerShell"]
 icon: terminal
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1839"
+  published: 2024-03-24T08:44:31Z
+  categories: [endpoint-manager, powershell]
 ---
 
 ### Introduction

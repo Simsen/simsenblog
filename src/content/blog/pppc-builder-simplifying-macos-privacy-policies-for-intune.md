@@ -5,6 +5,10 @@ date: 2026-02-22
 categories: [Intune, macOS, Tools]
 tags: [macOS, Tools]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2241"
+  published: 2026-02-22T05:54:13Z
+  categories: [endpoint-manager, macos, tools]
 ---
 
 Managing macOS privacy permissions in enterprise environments can quickly become complex. Permissions such as Screen Recording, Full Disk Access, Accessibility, Camera, and Microphone require properly configured PPPC profiles — and creating those manually can be time-consuming and error-prone.

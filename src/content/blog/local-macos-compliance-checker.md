@@ -5,6 +5,10 @@ date: 2025-03-17
 categories: [Intune, macOS, Tools]
 tags: ["Compliance"]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1999"
+  published: 2025-03-17T06:00:00Z
+  categories: [endpoint-manager, macos, tools]
 ---
 
 ### Why Compliance Matters for macOS Admins

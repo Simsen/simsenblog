@@ -46,6 +46,18 @@ const blog = defineCollection({
           .default([]),
       })
       .optional(),
+    /**
+     * Posts migrated from WordPress. Keeps the RSS feed identical for existing subscribers and sites
+     * that read it: the old item ID (guid, exactly as WordPress wrote it), the exact publish time, and the old category feeds
+     * (/category/<slug>/feed/) the post belonged to. Leave it out on new posts.
+     */
+    wordpress: z
+      .object({
+        guid: z.string().min(1),
+        published: z.coerce.date(),
+        categories: z.array(z.string()).default([]),
+      })
+      .optional(),
     /** While the archive is being migrated: link to the article on the old WordPress site. */
     original: z.string().url().optional(),
   }),

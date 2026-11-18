@@ -5,6 +5,10 @@ date: 2022-03-13
 categories: [Intune, Windows]
 tags: ["Defender for Endpoint", "PowerShell"]
 icon: terminal
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=827"
+  published: 2022-03-13T00:00:00Z
+  categories: [endpoint-manager, mdfe, powershell]
 ---
 
 Microsoft Defender on each client is a high important tool as it both are an Antivirus tool – but also deliver info to Defender for Endpoint as a sensor.

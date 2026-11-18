@@ -5,6 +5,10 @@ date: 2021-01-24
 categories: [Intune, Windows]
 tags: ["PowerShell"]
 icon: terminal
+wordpress:
+  guid: "http://www.simsenblog.dk/?p=424"
+  published: 2021-01-24T22:08:00Z
+  categories: [endpoint-manager, powershell]
 ---
 
 We got errors on our compliance policy after we enrolled them to Autopilot and I have the idea that the BIOS was correct configured. But instead of having the computer in hand. Together with a collegue we developed this script.

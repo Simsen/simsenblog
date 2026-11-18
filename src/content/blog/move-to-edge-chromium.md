@@ -5,6 +5,10 @@ date: 2021-01-08
 categories: [Intune, Windows]
 tags: ["Edge", "ConfigMgr"]
 icon: intune
+wordpress:
+  guid: "http://www.simsenblog.dk/?p=246"
+  published: 2021-01-08T02:33:00Z
+  categories: [edge, endpoint-manager, sccm]
 ---
 
 March 9. 2021 is the day where Edge Legacy will have End-of-Support.  

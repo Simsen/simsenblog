@@ -5,6 +5,10 @@ date: 2023-07-12
 categories: [Intune, Windows]
 tags: ["Defender for Endpoint"]
 icon: intune
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1716"
+  published: 2023-07-12T05:00:00Z
+  categories: [endpoint-manager, mdfe]
 ---
 
 ## Introduction

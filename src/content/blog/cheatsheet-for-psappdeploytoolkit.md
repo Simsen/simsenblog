@@ -5,6 +5,10 @@ date: 2020-12-07
 categories: [Windows, Tools]
 tags: ["MSI", "PowerShell"]
 icon: tool
+wordpress:
+  guid: "https://blog.wpin1.1prod.one/?p=29"
+  published: 2020-12-07T09:19:00Z
+  categories: [msi, powershell, tools]
 ---
 
 I have been using PSAppDeployToolkit for the last 3-4 years – and I dont make any software package without using PSAppDeployToolkit.

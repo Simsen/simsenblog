@@ -5,6 +5,10 @@ date: 2026-06-10
 categories: [macOS]
 tags: [macOS, Management]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2320"
+  published: 2026-06-10T13:00:00Z
+  categories: [endpoint-manager, macos]
 ---
 
 ## The Mac Just Became a Lot Easier to Secure. What IT Admins Need to Know

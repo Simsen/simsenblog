@@ -5,6 +5,10 @@ date: 2023-06-26
 categories: [Windows]
 tags: [Endpoint management]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1561"
+  published: 2023-06-26T09:00:35Z
+  categories: [endpoint-manager]
 ---
 
 ## Introduction and recap

@@ -5,6 +5,10 @@ date: 2022-03-20
 categories: [Windows]
 tags: ["AVD · Windows 365"]
 icon: windows
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=869"
+  published: 2022-03-20T00:00:00Z
+  categories: [avd]
 ---
 
 Windows 365 Business and Enterprise has been around for the last year and the companies begin to see all the advantages to easy deploy a Windows pc.

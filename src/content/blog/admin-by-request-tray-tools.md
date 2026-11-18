@@ -5,6 +5,10 @@ date: 2021-08-28
 categories: [Tools]
 tags: ["Admin By Request"]
 icon: tool
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=541"
+  published: 2021-08-28T10:00:00Z
+  categories: [tools]
 ---
 
 Previous Client management projects – was with a focus on lock down the client much as possible, so end-user couldnt install anything manually.

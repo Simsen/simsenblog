@@ -6,6 +6,10 @@ categories: [Windows, Tools]
 tags: ["Admin By Request", "AppLocker"]
 icon: tool
 permalink: "/2021/10/04/admin-by-request_and_ms-applocker/"
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=626"
+  published: 2021-10-04T11:00:00Z
+  categories: [ad-gpo, tools]
 ---
 
 Companies need to fulfil regulations, to document what specific applications that is running on the PC. Here it can be hard to make sure users don’t download software that is not approved and run ex. Shareware/malware, TeamViewer QuickSupport or Google Chrome. But Companies still want the flexibility to allow some apps to run for special matter. Here Admin by Request can help.

@@ -5,6 +5,10 @@ date: 2025-04-07
 categories: [Intune, macOS]
 tags: ["Shell scripts"]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2052"
+  published: 2025-04-07T05:00:00Z
+  categories: [endpoint-manager, macos, shell]
 ---
 
 ### Run On-Demand Scripts via Intune with a Dummy PKG

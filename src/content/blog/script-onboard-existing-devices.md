@@ -5,6 +5,10 @@ date: 2021-03-07
 categories: [Intune, Windows]
 tags: ["PowerShell"]
 icon: intune
+wordpress:
+  guid: "http://www.simsenblog.dk/?p=466"
+  published: 2021-03-07T02:07:00Z
+  categories: [endpoint-manager, powershell]
 ---
 
 When we talking about Windows 10 and Autopilot – we always recommend to make and agreement with the OEM partner, so they prepare the hardware to the Autopilot device list.

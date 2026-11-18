@@ -5,6 +5,10 @@ date: 2023-07-21
 categories: [Intune]
 tags: ["Zero Trust", "Modern management"]
 icon: intune
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1579"
+  published: 2023-07-21T11:00:52Z
+  categories: [endpoint-manager]
 ---
 
 ## Introduction

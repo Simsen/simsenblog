@@ -5,6 +5,10 @@ date: 2026-07-20
 categories: [Intune, Windows, Tools]
 tags: [Intune, Application packaging]
 icon: code
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2368"
+  published: 2026-07-20T06:00:00Z
+  categories: [endpoint-manager, msi, tools]
 ---
 
 When working with Microsoft Intune, one of the first things I often need from an MSI file is surprisingly simple:

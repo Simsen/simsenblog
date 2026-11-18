@@ -5,6 +5,10 @@ date: 2025-03-27
 categories: [Windows]
 tags: ["Defender XDR", "Exposure management"]
 icon: windows
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2033"
+  published: 2025-03-27T09:00:20Z
+  categories: [mcas, mdatp, mdfe]
 ---
 
 In an era where cyber threats are constantly evolving and attacks are becoming more sophisticated, organizations need a central tool to understand and address their security exposures. Defender Security Exposure Management is just that tool – a unified portal that provides a real-time view of risks and helps prioritize key security actions.

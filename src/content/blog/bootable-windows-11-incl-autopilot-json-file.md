@@ -5,6 +5,10 @@ date: 2022-02-06
 categories: [Intune, Windows]
 tags: ["Autopilot", "Windows 11"]
 icon: terminal
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=678"
+  published: 2022-02-06T11:00:00Z
+  categories: [endpoint-manager]
 ---
 
 This guide will go through all steps to create a bootable USB with Windows 11 – that includes the Autopilot profile for your Microsoft Endpoint Manager tenant.

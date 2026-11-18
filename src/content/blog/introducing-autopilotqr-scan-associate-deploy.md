@@ -19,6 +19,10 @@ project:
       primary: true
     - label: View on GitHub
       url: https://github.com/Simsen/AutopilotQR
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2447"
+  published: 2026-10-18T12:00:00Z
+  categories: [endpoint-manager]
 ---
 
 **Making Windows Autopilot Device Association easier with a free, open-source QR scanner.**

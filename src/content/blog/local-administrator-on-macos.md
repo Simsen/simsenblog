@@ -5,6 +5,10 @@ date: 2023-06-04
 categories: [macOS, Intune]
 tags: [macOS, Security]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=832"
+  published: 2023-06-04T17:40:00Z
+  categories: [macos, tools]
 ---
 
 When onboarding macOS with Apple Business Manager and Intune, there are a few important security considerations to keep in mind. Specifically, it’s crucial to control the level of access each user has on a device, and this includes the potential issue of local users obtaining administrator rights.

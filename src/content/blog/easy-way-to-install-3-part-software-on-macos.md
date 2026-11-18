@@ -5,6 +5,10 @@ date: 2025-03-11
 categories: [Intune, macOS, Tools]
 tags: ["Installomator", "App deployment"]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1971"
+  published: 2025-03-11T22:00:00Z
+  categories: [endpoint-manager, macos, tools]
 ---
 
 ## Introduction

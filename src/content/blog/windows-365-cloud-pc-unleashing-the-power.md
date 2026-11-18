@@ -5,6 +5,10 @@ date: 2023-06-12
 categories: [Windows]
 tags: [Windows 365]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1429"
+  published: 2023-06-12T05:30:00Z
+  categories: [avd]
 ---
 
 Having 32GB of memory isn’t a novelty in today’s tech world. We’ve had powerful desktop machines and servers with such capabilities for some time. However, the real question isn’t just about having that capacity – it’s about how we can unleash its full potential.

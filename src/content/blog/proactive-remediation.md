@@ -5,6 +5,10 @@ date: 2020-12-21
 categories: [Intune, Windows]
 tags: ["PowerShell"]
 icon: intune
+wordpress:
+  guid: "http://www.simsenblog.dk/?p=375"
+  published: 2020-12-21T02:47:21Z
+  categories: [endpoint-manager, powershell]
 ---
 
 Since summer 2020 – Proactive Remediation has been available in the Endpoint Manager portal.

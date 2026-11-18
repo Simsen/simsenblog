@@ -5,6 +5,10 @@ date: 2022-02-13
 categories: [Intune, Windows, Tools]
 tags: ["Admin By Request", "Autopilot", "LAPS"]
 icon: tool
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=762"
+  published: 2022-02-13T19:50:41Z
+  categories: [endpoint-manager, tools]
 ---
 
 I have over time been more and more impressed with **Fasttrack: Admin by Request**.  

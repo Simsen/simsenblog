@@ -5,6 +5,10 @@ date: 2025-10-09
 categories: [Intune, Windows]
 tags: ["Windows 11", "Security baseline"]
 icon: intune
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2144"
+  published: 2025-10-09T04:08:02Z
+  categories: [endpoint-manager]
 ---
 
 ### 1\. Reframing the upgrade as a security opportunity

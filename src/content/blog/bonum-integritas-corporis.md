@@ -5,6 +5,10 @@ date: 2020-12-16
 categories: [Windows]
 tags: ["ConfigMgr"]
 icon: windows
+wordpress:
+  guid: "https://blog.wpin1.1prod.one/?p=101"
+  published: 2020-12-16T10:17:00Z
+  categories: [sccm]
 ---
 
 It can be hard to find the right way to patch Windows 10 – also when Microsoft release patches outside “Patch Tuesday”.

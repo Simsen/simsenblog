@@ -5,6 +5,10 @@ date: 2025-12-14
 categories: [Intune, Windows]
 tags: ["AI PC", "Local AI"]
 icon: intune
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2182"
+  published: 2025-12-14T00:00:00Z
+  categories: [endpoint-manager]
 ---
 
 ## Introduction

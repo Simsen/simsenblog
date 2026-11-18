@@ -20,10 +20,10 @@ export default defineConfig({
     '/reference/': '/about/',
     '/intuneinsiderdk/': 'https://www.youtube.com/@IntuneInsiderDK',
   },
-  // sitemap-index.xml for search engines. Redirect pages and the feed copy at /feed/ are left out.
+  // sitemap-index.xml for search engines. Redirect pages and the feed addresses (/feed/, /rss/, ...) are left out.
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/category/') && !page.endsWith('/feed/'),
+      filter: (page) => !page.includes('/category/') && !/\/(feed|rss)\//.test(new URL(page).pathname),
     }),
   ],
   // Content Security Policy as a <meta> tag (GitHub Pages can't send headers). Astro hashes every

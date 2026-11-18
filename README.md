@@ -52,6 +52,7 @@ Write the steps here.
 | `permalink` | no | Override the URL, e.g. `/2021/10/04/old-wordpress-slug/`. For migrated posts whose old URL doesn't match the date and file name. |
 | `project` | no | Project banner at the top and buttons at the bottom. See `src/content/blog/introducing-autopilotqr-scan-associate-deploy.md`. |
 | `original` | no | During migration: link to the post on the old WordPress site. |
+| `wordpress` | no | Only on posts moved from WordPress: the old feed ID, publish time and categories, so RSS subscribers don't see them as new. Don't add it to new posts. |
 
 ### Writing tips
 
@@ -130,5 +131,6 @@ URLs follow the WordPress pattern `/YYYY/MM/DD/<slug>/` with a trailing slash, s
 - [x] Validation and manual publish workflow
 - [ ] Migrate the WordPress archive (13 sample posts currently link to their originals)
 - [ ] Tools, Speaking, Courses, About and Resources sections
-- [ ] Full-archive search (Pagefind), RSS, sitemap
+- [x] RSS (same addresses and item IDs as WordPress), sitemap
+- [ ] Full-archive search (Pagefind)
 - [ ] Domain cutover

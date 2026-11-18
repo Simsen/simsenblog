@@ -5,6 +5,10 @@ date: 2026-07-09
 categories: [macOS]
 tags: [macOS]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2337"
+  published: 2026-07-09T07:32:22Z
+  categories: [endpoint-manager, macos]
 ---
 
 ## There is still a lot of skepticism in IT when the topic of introducing Macs into the organization comes up.

@@ -6,6 +6,10 @@ date: 2026-11-05
 categories: [Intune, Windows]
 tags: [Edge, Windows MAM, Conditional Access]
 icon: windows
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2405"
+  published: 2026-11-05T05:00:00Z
+  categories: [endpoint-manager]
 ---
 
 Microsoft Edge version 150+ introduces **Protected Downloads**, a new capability for Windows MAM that automatically redirects downloaded files to OneDrive for Business. This helps organizations keep corporate data protected without preventing users from accessing the files they need.

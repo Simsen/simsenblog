@@ -5,6 +5,10 @@ date: 2023-07-03
 categories: [Intune, macOS, Tools]
 tags: ["Parallels", "Enrolment"]
 icon: macos
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=1048"
+  published: 2023-07-03T08:00:06Z
+  categories: [endpoint-manager, macos, tools]
 ---
 
 ## Introduction

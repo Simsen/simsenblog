@@ -5,6 +5,10 @@ date: 2021-03-09
 categories: [Windows]
 tags: ["Edge"]
 icon: windows
+wordpress:
+  guid: "http://www.simsenblog.dk/?p=508"
+  published: 2021-03-09T06:00:00Z
+  categories: [edge]
 ---
 
 If your organisation already switched to Microsoft Edge – maybe this feature can be ussful.

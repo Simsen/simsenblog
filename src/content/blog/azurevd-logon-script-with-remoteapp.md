@@ -5,6 +5,10 @@ date: 2022-03-02
 categories: [Windows]
 tags: ["AVD · Windows 365"]
 icon: windows
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=849"
+  published: 2022-03-02T05:00:42Z
+  categories: [avd]
 ---
 
 When you setup RemoteApp in Azure Virtual Desktop – Microsoft has designed it to minimize the load of:

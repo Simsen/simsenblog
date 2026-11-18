@@ -5,6 +5,10 @@ date: 2026-03-30
 categories: [Intune]
 tags: [Intune, Compliance]
 icon: article
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2258"
+  published: 2026-03-30T16:00:00Z
+  categories: [endpoint-manager, mdfe, powershell]
 ---
 
 One of the most common challenges when implementing **Conditional Access with “Require compliant device”** is fear.

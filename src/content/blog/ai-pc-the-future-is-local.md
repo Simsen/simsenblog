@@ -5,6 +5,10 @@ date: 2025-10-02
 categories: [Intune, Windows]
 tags: ["AI PC", "Local AI"]
 icon: intune
+wordpress:
+  guid: "https://www.simsenblog.dk/?p=2176"
+  published: 2025-10-02T07:00:00Z
+  categories: [endpoint-manager]
 ---
 
 ## What does AI PC mean?
