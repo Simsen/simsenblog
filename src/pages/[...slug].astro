@@ -6,6 +6,7 @@
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EndpointGame from '../components/EndpointGame.astro';
+import Sidebar from '../components/Sidebar.astro';
 import { ICONS, SITE } from '../lib/site';
 import { formatDate, fullTitle, getPosts, postPath, type Post } from '../lib/posts';
 
@@ -112,6 +113,10 @@ const primaryLinks = project?.links ?? [];
       }
     </div>
 
+    {/* Posts without sections (and no project) get the frontpage sidebar instead of "On this page". */}
+    {
+      toc.length === 0 && !project && <Sidebar show="tools" />
+    }
     {
       (toc.length > 0 || project) && (
         <aside class="toc toc-side" aria-label="On this page">
