@@ -87,13 +87,13 @@ When previewing locally with `npm run dev`, drafts **are** shown, with a DRAFT l
 Requires Node.js 22.23 or newer.
 
 ```sh
-git clone https://github.com/Simsen/<repo>.git
-cd <repo>
+git clone https://github.com/Simsen/simsenblog.git
+cd simsenblog
 npm install
-npm run dev        # http://localhost:4321, reloads as you edit
+npm run dev        # http://localhost:4321, reloads as you edit (drafts shown)
 npm run validate   # check all posts
-npm run check      # validate + full production build into dist/
-npm run preview    # serve the built dist/ folder
+npm run check      # validate + full production build into dist/ (incl. search index)
+npm run preview    # serve the built dist/ folder (full-text search works here, not in dev)
 ```
 
 ## How it's put together
@@ -102,36 +102,64 @@ npm run preview    # serve the built dist/ folder
 .github/workflows/
   publish.yml             Manual: validate → build → deploy to GitHub Pages
   validate-content.yml    Every push / PR: validate → build (no deploy)
-public/images/            Logo, portrait, MVP logo; post images in posts/<post-name>/
+  dependabot.yml          Monthly update PRs for npm packages and Actions (pinned to commit SHAs)
+.claude/skills/new-post/  The /new-post command for writing a post with Claude Code
+templates/new-post.md     Starting point for a new post, with every field and formatting example
+public/                   Images (posts/<post-name>/ per post), downloads (Files/, cmtrace.exe), robots.txt
 scripts/validate-content.mjs   Metadata, dates, duplicate URLs, missing images
 src/
   content/blog/           One Markdown file per article
   content.config.ts       The post metadata schema
-  lib/site.ts             Site name, links, categories, icons
+  lib/site.ts             Site name, links, categories, icons, contact form keys
   lib/posts.ts            URL scheme, sorting, drafts
-  components/             Header, Footer, AuthorStrip, PostRow (expandable preview)
+  lib/tools.ts            The tools on /tools/ and in the sidebar
+  lib/feed.ts             RSS feeds (WordPress-compatible addresses and item IDs)
+  components/             Header, Footer, Sidebar, PostRow, ContactForm, InlineScript, the hero mini-games
+  scripts/                gallery.ts (step-by-step galleries), lightbox.ts (click to enlarge)
   layouts/BaseLayout.astro
-  pages/index.astro       Home: introduction, two entry boxes, author strip, filterable article list
+  pages/index.astro       Blog: topic filters, search (titles + full text), show more
   pages/[...slug].astro   Article pages at /YYYY/MM/DD/<file-name>/
+  pages/                  tools, course, links, about, 404, feed addresses
   styles/global.css       Theme tokens and all component styles
 ```
 
-URLs follow the WordPress pattern `/YYYY/MM/DD/<slug>/` with a trailing slash, so existing links to simsenblog.dk keep working after the move.
+URLs follow the WordPress pattern `/YYYY/MM/DD/<slug>/` with a trailing slash, so existing links to simsenblog.dk keep working. Old WordPress addresses that moved are redirected in `astro.config.mjs`; old `/category/` and `/tag/` links land on the matching filter or search.
 
-## One-time GitHub Pages setup
+### Search
 
-1. Push this repository to GitHub as a **public** repository.
-2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
-3. Run **Actions → Publish website**.
-4. Custom domain (at cutover): **Settings → Pages → Custom domain** → `www.simsenblog.dk`, then update DNS and enable **Enforce HTTPS**.
+The search box filters the post list by title, description and tags as you type. Below it, "Found in the article text" lists posts that only mention the words inside the article. That part uses [Pagefind](https://pagefind.app): `npm run build` indexes the article text of every post into `dist/pagefind/`, and the browser downloads only the small parts of the index it needs. No server or outside service is involved.
+
+### Security
+
+- Static files only: no server-side code, database, login page or plugins on the website.
+- Content Security Policy in every page (`astro.config.mjs`): only the site's own scripts run (inline scripts by hash, via `InlineScript.astro`).
+- `main` is protected against force-push and deletion. Secret scanning, push protection and Dependabot security updates are on.
+- Verify `simsenblog.dk` under the GitHub account's **Settings → Pages**, so no one else can use the domain there (TXT record `_github-pages-challenge-simsen` at one.com).
+
+## Hosting and domain
+
+- GitHub Pages, deployed by **Actions → Publish website**, with HTTPS enforced.
+- DNS at one.com: `simsenblog.dk` → GitHub Pages IPs (A/AAAA `185.199.108–111.153`, `2606:50c0:8000–8003::153`), `www` → CNAME `simsen.github.io`. GitHub redirects `simsenblog.dk` to `www.simsenblog.dk`.
+- Email (Microsoft 365 MX, autodiscover, SPF, DKIM) is separate and unaffected.
 
 ## Status
 
-- [x] Homepage and article layout ported from the approved prototypes
-- [x] Markdown → article + homepage preview + filters + search
+Live at **https://www.simsenblog.dk** since 19 November 2026.
+
+- [x] Homepage and article layout from the approved prototypes
+- [x] Markdown → article, homepage preview, topic filters, show more
 - [x] Validation and manual publish workflow
-- [ ] Migrate the WordPress archive (13 sample posts currently link to their originals)
-- [ ] Tools, Speaking, Courses, About and Resources sections
-- [x] RSS (same addresses and item IDs as WordPress), sitemap
-- [ ] Full-archive search (Pagefind)
-- [ ] Domain cutover
+- [x] All 41 WordPress posts migrated, on their original URLs, with images, downloads, video and galleries
+- [x] Tools, Courses, Links and About pages, 404 page with search
+- [x] Lightbox for post images, step-by-step galleries
+- [x] RSS on the same addresses and item IDs as WordPress, including category feeds; sitemap
+- [x] Full-text search (Pagefind)
+- [x] Security hardening: CSP, branch protection, pinned Actions, Dependabot
+- [x] Domain cutover from WordPress to GitHub Pages
+- [x] Post template and `/new-post` command
+- [ ] Contact form: add a Formspree ID or Web3Forms key in `src/lib/site.ts`
+- [ ] References page (customer logos); `/reference/` redirects to About for now
+- [ ] Alt text for the migrated images
+- [ ] Full-resolution originals for 75 screenshots migrated at WordPress's 1024 px size
+- [ ] Confirm the domain shows as Verified in GitHub, and remove the old `new` CNAME at one.com
+- [ ] Shut down the old WordPress hosting after a safe period

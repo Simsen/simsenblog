@@ -42,6 +42,10 @@ const posts = await getPosts();
       {posts.map((post, i) => <PostRow post={post} index={i} />)}
     </div>
     <button class="button show-more" id="showMore" type="button" hidden>Show more posts</button>
+    <section class="fulltext" id="fulltext" hidden aria-labelledby="fulltextHeading">
+      <h3 class="fulltext-head" id="fulltextHeading">Found in the article text</h3>
+      <ol class="fulltext-list" id="fulltextList"></ol>
+    </section>
     <p class="empty" id="empty" hidden>No articles match. Try another topic or search.</p>
     <span class="result-status" id="resultStatus" role="status"></span>
   </section>
@@ -99,10 +103,93 @@ const posts = await getPosts();
     const remaining = matched - shown;
     showMore.hidden = remaining <= 0;
     showMore.textContent = `Show more posts (${remaining} more)`;
-    empty.hidden = matched !== 0;
-    status.textContent = query || category !== 'all' ? `${matched} matching article${matched === 1 ? '' : 's'}.` : '';
+    listMatches = matched;
+    updateSummary();
     reconcilePreview();
+    searchFullText(query);
   }
+
+  // ---------- Full-text search (Pagefind) ----------
+  // The list above searches titles, descriptions and tags. Pagefind (built into /pagefind/ when the site
+  // is built) also searches the article text, and lists posts that only mention the words inside.
+  // Not available in `npm run dev` (the index is made by `npm run build`); the list search still works.
+  const fulltext = document.querySelector<HTMLElement>('#fulltext')!;
+  const fulltextList = document.querySelector<HTMLOListElement>('#fulltextList')!;
+  let listMatches = 0;
+  let textMatches = 0;
+  let pagefind: any;
+  let pagefindFailed = false;
+  let searchRun = 0;
+
+  function updateSummary() {
+    const query = search.value.trim();
+    empty.hidden = listMatches + textMatches !== 0;
+    const extra = textMatches ? `, ${textMatches} more mention it in the text` : '';
+    status.textContent = query || category !== 'all' ? `${listMatches} matching article${listMatches === 1 ? '' : 's'}${extra}.` : '';
+  }
+
+  async function loadPagefind() {
+    if (pagefind || pagefindFailed) return pagefind;
+    try {
+      const url = '/pagefind/pagefind.js';
+      pagefind = await import(/* @vite-ignore */ url);
+      await pagefind.options({ excerptLength: 26 });
+    } catch {
+      pagefindFailed = true;
+    }
+    return pagefind;
+  }
+
+  const cardFor = (url: string) =>
+    cards.find((c) => c.querySelector<HTMLAnchorElement>('a.post-title')!.getAttribute('href') === url);
+
+  async function searchFullText(query: string) {
+    const run = ++searchRun;
+    if (query.length < 2) return showTextResults([]);
+    const pf = await loadPagefind();
+    if (!pf || run !== searchRun) return;
+    const found = await pf.search(query);
+    if (run !== searchRun) return;
+    // Only posts in the current topic that the list above doesn't already show.
+    const extra = [];
+    for (const r of found.results.slice(0, 30)) {
+      const data = await r.data();
+      if (run !== searchRun) return;
+      const card = cardFor(data.url);
+      if (!card || !card.hidden) continue;
+      if (category !== 'all' && !card.dataset.categories!.split(' ').includes(category)) continue;
+      extra.push({ card, data });
+      if (extra.length === 8) break;
+    }
+    showTextResults(extra);
+  }
+
+  function showTextResults(results: { card: HTMLElement; data: any }[]) {
+    textMatches = results.length;
+    fulltextList.replaceChildren(
+      ...results.map(({ card, data }) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.className = 'fulltext-title';
+        a.href = data.url;
+        a.textContent = card.querySelector('a.post-title')!.textContent;
+        const meta = document.createElement('span');
+        meta.className = 'fulltext-meta';
+        meta.textContent = [...card.querySelector('.meta')!.children].map((el) => el.textContent!.trim()).filter(Boolean).join(' · ');
+        const excerpt = document.createElement('p');
+        excerpt.className = 'fulltext-excerpt';
+        // Pagefind escapes the page text and wraps the matching words in <mark>.
+        excerpt.innerHTML = `…${data.excerpt}…`;
+        li.append(a, meta, excerpt);
+        return li;
+      }),
+    );
+    fulltext.hidden = results.length === 0;
+    updateSummary();
+  }
+
+  // Start loading the index as soon as someone heads for the search box.
+  search.addEventListener('focus', () => loadPagefind(), { once: true });
 
   filters.forEach((button) =>
     button.addEventListener('click', () => {

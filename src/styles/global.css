@@ -108,6 +108,16 @@
   .show-more { display: flex; width: 100%; justify-content: center; margin-top: 18px; padding: 13px 17px; font-size: 13px; color: var(--light); cursor: pointer; transition: border-color .15s, color .15s; }
   .show-more:hover { border-color: #455d95; color: var(--text); }
   .show-more[hidden] { display: none; }
+  /* Full-text search results under the post list (Pagefind) */
+  .fulltext { margin-top: 26px; }
+  .fulltext-head { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; font-weight: 600; }
+  .fulltext-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .fulltext-list li { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); padding: 14px 17px; display: grid; gap: 4px; }
+  .fulltext-title { color: var(--text); font-weight: 600; font-size: 15px; text-decoration: none; }
+  .fulltext-title:hover { text-decoration: underline; }
+  .fulltext-meta { font-size: 11px; color: var(--muted); }
+  .fulltext-excerpt { margin: 4px 0 0; font-size: 13px; line-height: 1.6; color: var(--light); overflow-wrap: anywhere; }
+  .fulltext-excerpt mark { background: rgb(84 127 255 / .25); color: var(--text); border-radius: 3px; padding: 0 2px; }
   .empty { color: var(--muted); text-align: center; padding: 30px; border: 1px dashed var(--border); border-radius: 8px; }
   .result-status { font-size: 10px; color: var(--muted); }
   @media (max-width: 620px) {

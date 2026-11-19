@@ -45,6 +45,8 @@ export default defineConfig({
         'upgrade-insecure-requests',
       ],
       styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
+      // Full-text search (Pagefind) runs as WebAssembly. 'wasm-unsafe-eval' allows that and nothing else.
+      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'"] },
     },
   },
   markdown: {

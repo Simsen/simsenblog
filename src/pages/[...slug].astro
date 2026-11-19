@@ -68,7 +68,9 @@ const primaryLinks = project?.links ?? [];
           </nav>
         )
       }
-    <article class="article-body">
+    {/* Full-text search (Pagefind) indexes only the article text, not menus, sidebar or games. */}
+    <article class="article-body" data-pagefind-body>
+      <span hidden data-pagefind-meta={`title:${fullTitle(post)}`}></span>
       {
         project && (
           <div class="project-banner">
