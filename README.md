@@ -7,6 +7,7 @@ Built with [Astro](https://astro.build) and Tailwind CSS from Markdown files, pu
 ## Publish a post
 
 1. **Write** a Markdown file with a metadata block at the top (see [Post format](#post-format)).
+   Easiest: copy [`templates/new-post.md`](templates/new-post.md), which has every field and formatting example with notes.
    Name it the way you want the URL to read: `my-new-intune-guide.md` → `/2026/11/16/my-new-intune-guide/`.
 2. **Upload** it to `src/content/blog/`, and its images to `public/images/posts/<post-name>/`.
    In the GitHub web interface: open the folder → **Add file → Upload files** → **Commit changes**.
