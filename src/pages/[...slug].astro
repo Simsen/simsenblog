@@ -8,7 +8,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EndpointGame from '../components/EndpointGame.astro';
 import Sidebar from '../components/Sidebar.astro';
 import { ICONS, SITE } from '../lib/site';
-import { formatDate, fullTitle, getPosts, postPath, type Post } from '../lib/posts';
+import { formatDate, fullTitle, getPosts, postImage, postPath, type Post } from '../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -37,7 +37,7 @@ const toc = headings.filter((h) => h.depth === 2);
 const primaryLinks = project?.links ?? [];
 ---
 
-<BaseLayout title={fullTitle(post)} description={description} active="blog" type="article">
+<BaseLayout title={fullTitle(post)} description={description} active="blog" type="article" image={postImage(post)}>
   <div slot="before" class="reading-progress" aria-hidden="true"></div>
 
   <section class="hero hero-compact">

@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { SITE } from './site';
-import { fullTitle, getPosts, postPath, type Post } from './posts';
+import { fullTitle, getPosts, postImage, postPath, type Post } from './posts';
 
 /**
  * RSS feeds. Other sites and feed readers subscribed to the WordPress feeds, so these keep the same
@@ -71,7 +71,7 @@ export async function feedResponse(context: APIContext, { path, title = SITE.tit
     description: SITE.description,
     site,
     trailingSlash: true,
-    xmlns: { atom: 'http://www.w3.org/2005/Atom', dc: 'http://purl.org/dc/elements/1.1/' },
+    xmlns: { atom: 'http://www.w3.org/2005/Atom', dc: 'http://purl.org/dc/elements/1.1/', media: 'http://search.yahoo.com/mrss/' },
     customData: [
       `<atom:link href="${new URL(path, site)}" rel="self" type="application/rss+xml" />`,
       '<language>en-GB</language>',
@@ -79,6 +79,7 @@ export async function feedResponse(context: APIContext, { path, title = SITE.tit
     ].join(''),
     items: posts.map((post) => {
       const wp = post.data.wordpress;
+      const image = postImage(post);
       return {
         title: fullTitle(post),
         link: postPath(post),
@@ -88,7 +89,9 @@ export async function feedResponse(context: APIContext, { path, title = SITE.tit
         categories: [...post.data.categories, ...(post.data.tags ?? [])],
         customData:
           `<dc:creator>${escape(SITE.author)}</dc:creator>` +
-          (wp ? `<guid isPermaLink="false">${escape(wp.guid)}</guid>` : ''),
+          (wp ? `<guid isPermaLink="false">${escape(wp.guid)}</guid>` : '') +
+          // Picture for feed readers and aggregators (e.g. a thumbnail next to the post).
+          (image ? `<media:content url="${escape(new URL(image, site).href)}" medium="image" />` : ''),
       };
     }),
   });

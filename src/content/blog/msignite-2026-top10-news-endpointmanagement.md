@@ -14,6 +14,8 @@ Rather than covering everything announced at Ignite, I've picked **10 announceme
 
 Some features are already generally available, while others are still in preview.
 
+![Microsoft Ignite 2026 – Top 10 news for endpoint management: Intune for Windows Server, software compliance policies, Microsoft Perception, Windows Administrator Protection, automatic app updates, Windows Baseline Protection, CIS benchmark auditing, Autopilot device preparation, Endpoint Security Platform and AI execution containers, each with its availability](/images/posts/msignite-2026-top10-news-endpointmanagement/ignite-2026-top-10-endpoint-news.jpg)
+
 ## 1. Microsoft Intune Can Now Manage Windows Server
 
 **Availability: Insider Preview**

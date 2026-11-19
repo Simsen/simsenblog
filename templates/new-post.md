@@ -37,6 +37,9 @@ icon: intune
 # Optional: true shows a FEATURED label on the homepage.
 # featured: true
 
+# Optional picture for LinkedIn/X shares and feed readers. Defaults to the first image in the post.
+# image: /images/posts/my-new-intune-guide/cover.jpg
+
 # true = not on the website yet (but the file is public on GitHub). Remove when ready.
 draft: true
 ---

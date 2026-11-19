@@ -27,6 +27,8 @@ const blog = defineCollection({
     /** Small icon in the homepage list. */
     icon: z.enum(ICON_NAMES).default('article'),
     featured: z.boolean().default(false),
+    /** Share image for LinkedIn/X/aggregators and the RSS feed. Defaults to the first image in the post. */
+    image: z.string().optional(),
     /** true = left out of every page, the homepage and search. Still public in the Git repo. */
     draft: z.boolean().default(false),
     /** Override the generated URL, e.g. "/2021/10/04/old-wordpress-slug/". */

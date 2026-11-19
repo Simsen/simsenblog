@@ -29,3 +29,14 @@ export function topics(post: Post): string {
 export function fullTitle(post: Post): string {
   return post.data.subtitle ? `${post.data.title} — ${post.data.subtitle}` : post.data.title;
 }
+
+/**
+ * The post's share image (path like /images/posts/x/y.png), used for og:image and in the RSS feed,
+ * so LinkedIn, X and feed aggregators can show a picture: `image` from the front matter, otherwise
+ * the first local image in the post.
+ */
+export function postImage(post: Post): string | undefined {
+  if (post.data.image) return post.data.image;
+  const html = post.rendered?.html ?? '';
+  return html.match(/<img[^>]+src="(\/images\/[^"]+)"/)?.[1];
+}

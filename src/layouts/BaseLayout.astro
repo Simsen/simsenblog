@@ -10,9 +10,12 @@ interface Props {
   description?: string;
   active?: 'blog' | 'tools' | 'courses' | 'links' | 'about';
   type?: 'website' | 'article';
+  /** Share image (site path), for og:image / twitter:image. */
+  image?: string;
 }
 
-const { title, description = SITE.description, active, type = 'website' } = Astro.props;
+const { title, description = SITE.description, active, type = 'website', image } = Astro.props;
+const imageUrl = image ? new URL(image, Astro.site).href : undefined;
 const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
@@ -61,6 +64,9 @@ const transitions = String.raw`(() => {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.title} />
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
     <meta name="generator" content={Astro.generator} />
     <slot name="head" />
     <InlineScript code={transitions} />

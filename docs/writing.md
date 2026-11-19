@@ -48,6 +48,7 @@ Write the steps here.
 | `subtitle` | no | Second headline line on the article page, in light blue. Lists show "Title — Subtitle". |
 | `lead` | no | Longer introduction under the article headline. Defaults to `description`. |
 | `featured` | no | `true` adds a FEATURED label on the homepage. |
+| `image` | no | Picture shown when the post is shared (LinkedIn, X) and next to it in feed readers/aggregators, e.g. `/images/posts/my-post/cover.jpg`. Defaults to the first image in the post. |
 | `draft` | no | `true` leaves the post out of every page, the homepage and search. See [Drafts](#drafts). |
 | `permalink` | no | Override the URL, e.g. `/2021/10/04/old-wordpress-slug/`. For migrated posts whose old URL doesn't match the date and file name. |
 | `project` | no | Project banner at the top and buttons at the bottom. See `src/content/blog/introducing-autopilotqr-scan-associate-deploy.md`. |
