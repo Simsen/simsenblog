@@ -6,7 +6,7 @@ description: Create, preview and publish a new SIMSENblog post. Use when Simon w
 # New SIMSENblog post
 
 Simon writes about Microsoft Intune, Windows, macOS and endpoint security. Help him get from an idea,
-notes or screenshots to a published post. Work in this repository; the README has the full post format.
+notes or screenshots to a published post. Work in this repository; `docs/writing.md` has the full post format.
 
 ## 1. Start
 
