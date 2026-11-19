@@ -1,6 +1,7 @@
 /**
  * Community tools. One entry per tool; the Tools page and the homepage sidebar both read from here.
  * Order = display order. `sidebar: false` hides a tool from the homepage sidebar.
+ * `hidden: true` leaves a tool off the site completely (e.g. not announced yet); delete the line to show it.
  */
 export interface Tool {
   id: string;
@@ -21,11 +22,14 @@ export interface Tool {
   writeup?: string;
   github: string;
   sidebar?: boolean;
+  hidden?: boolean;
 }
 
-export const TOOLS: Tool[] = [
+const ALL_TOOLS: Tool[] = [
   {
     id: 'intunescope',
+    // Not announced yet: hidden from the Tools page and the sidebar. Remove this line to publish it.
+    hidden: true,
     name: 'IntuneScope',
     suffix: '.app',
     icon: '◎',
@@ -136,3 +140,6 @@ export const TOOLS: Tool[] = [
     sidebar: false,
   },
 ];
+
+/** The tools shown on the site. */
+export const TOOLS = ALL_TOOLS.filter((t) => !t.hidden);
