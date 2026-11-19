@@ -19,6 +19,8 @@ export default defineConfig({
     '/edge-favorit-builder/': '/tools/',
     '/reference/': '/about/',
     '/intuneinsiderdk/': 'https://www.youtube.com/@IntuneInsiderDK',
+    // Short links for slides and comments.
+    '/ignite26/': '/2026/11/19/msignite-2026-top10-news-endpointmanagement/',
   },
   // sitemap-index.xml for search engines. Redirect pages and the feed addresses (/feed/, /rss/, ...) are left out.
   integrations: [
