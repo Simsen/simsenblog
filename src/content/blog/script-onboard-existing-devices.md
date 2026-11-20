@@ -40,19 +40,19 @@ Press SHIFT + F10 to get a commandprompt – then run the script from a USB.
 
 ---
 
-![](/images/posts/script-onboard-existing-devices/bioscheck.png)
+![Terminal output of the hardware check confirming TPM 2.0, virtualisation, Secure Boot and UEFI are enabled](/images/posts/script-onboard-existing-devices/bioscheck.png)
 
 Whats in the brackets will be used in the **Group Tag**.  
 Open ReadMe file to see what scripts that need to be changed for this part.
 
-![](/images/posts/script-onboard-existing-devices/locationselector.png)
+![Location picker dialog listing SIMSEN HQ, New York and LA, where the bracketed code becomes the Group Tag](/images/posts/script-onboard-existing-devices/locationselector.png)
 
 Now the computer serialnumber and hash will be uploaded and waiting for confirmed Autopilot deployment profile assignment
 
-![](/images/posts/script-onboard-existing-devices/waitingforAssign-1024x472.png)
+![Terminal output showing the device hash imported to Autopilot and the script waiting for profile assignment](/images/posts/script-onboard-existing-devices/waitingforAssign-1024x472.png)
 
 Autopilot profile is assigned – wait another 15min before proceed that is my experience.
 
-![](/images/posts/script-onboard-existing-devices/assigned-1024x295.png)
+![Terminal output confirming the device was registered and the Autopilot profile was assigned successfully](/images/posts/script-onboard-existing-devices/assigned-1024x295.png)
 
-[![](/images/posts/script-onboard-existing-devices/github-logo.png)](https://github.com/Simsen/AutopilotOnboarding)
+[![AutopilotOnboarding on GitHub](/images/posts/script-onboard-existing-devices/github-logo.png)](https://github.com/Simsen/AutopilotOnboarding)

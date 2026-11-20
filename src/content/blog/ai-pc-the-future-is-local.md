@@ -37,7 +37,7 @@ An AI PC differs from your “regular” PC by having:
 -   Optimized chips from Apple (M-series), Qualcomm (Snapdragon X), AMD and Intel
 -   Built-in support for AI features such as Recall, Live Captions, AI Resume, local image understanding, summarize my day, etc.
 
-![](/images/posts/ai-pc-the-future-is-local/image.png)
+![A Windows laptop and a MacBook side by side, both running Microsoft Word locally](/images/posts/ai-pc-the-future-is-local/image.png)
 
 ## Why local AI?
 

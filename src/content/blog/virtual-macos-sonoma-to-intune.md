@@ -30,7 +30,7 @@ Unfortunately is it not possible to onboard the VM from Apple Business Manager t
     
     -   Download macOS Sonoma 14 beta 2 image
     -   Download Device Support for MacOS 14 beta 2
-    -   ![](/images/posts/virtual-macos-sonoma-to-intune/download_ipsw.png)  
+    -   ![Apple Developer downloads page highlighting the macOS 14 beta 2 restore image and Device Support for macOS 14 beta 2](/images/posts/virtual-macos-sonoma-to-intune/download_ipsw.png)  
         
     
     -   Install **Device Support for MacOS 14 beta 2** on the MacOS host(physical)
@@ -40,18 +40,18 @@ Unfortunately is it not possible to onboard the VM from Apple Business Manager t
 ## Create MacOS 14 Sonoma VM
 
 -   Go to Finder – browse to these 3 locations
-    -   Path to the application in Parallels Desktop to create the VM![](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path1.png)
+    -   Path to the application in Parallels Desktop to create the VM![Finder path to prl_macvm_create inside Parallels Desktop.app/Contents/MacOS](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path1.png)
     -   Path to the ipsw file – you just downloaded
-    -   ![](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path2.png)
+    -   ![Finder path to the downloaded UniversalMac_14.0_23A5276g_Restore.ipsw file in Downloads](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path2.png)
     -   Empty folder – to store the VM
-    -   ![](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path3.png)
+    -   ![Finder path to the empty Parallels/MacOS 14 Sonoma folder that will store the VM](/images/posts/virtual-macos-sonoma-to-intune/MacOS_Sonoma_path3.png)
 -   Start Terminal – then it should look like this:
 
-![](/images/posts/virtual-macos-sonoma-to-intune/MicrosoftTeams-image-28-1024x725.png)
+![Terminal running prl_macvm_create with the Sonoma ipsw and target macvm path, showing installation progress](/images/posts/virtual-macos-sonoma-to-intune/MicrosoftTeams-image-28-1024x725.png)
 
 When the “installation” is done – click on the macvm file, then it will show up in Control Center
 
-![](/images/posts/virtual-macos-sonoma-to-intune/MacOS_SonomaVM-1-1024x306.png)
+![Parallels Desktop Control Center listing the new macOS virtual machine, powered off](/images/posts/virtual-macos-sonoma-to-intune/MacOS_SonomaVM-1-1024x306.png)
 
   
 When turn on – it is now ready to continue the setup
@@ -83,7 +83,7 @@ When turn on – it is now ready to continue the setup
 
 Open safari – and go to this site: [Enroll your Mac with Intune Company Portal | Microsoft Learn](https://learn.microsoft.com/en-us/mem/intune/user-help/enroll-your-device-in-intune-macos-cp#install-company-portal-app)
 
-![](/images/posts/virtual-macos-sonoma-to-intune/Screenshot-2023-06-30-at-08.15.05.png)
+![Safari prompt to allow downloads from learn.microsoft.com while downloading Company Portal for Mac](/images/posts/virtual-macos-sonoma-to-intune/Screenshot-2023-06-30-at-08.15.05.png)
 *Download Company portal for Mac – and install*
 
 <div class="post-gallery" role="group" aria-roledescription="gallery" aria-label="Enrol macOS Sonoma in Intune">

@@ -11,7 +11,7 @@ wordpress:
   categories: [endpoint-manager, macos, tools]
 ---
 
-### Why Compliance Matters for macOS Admins
+## Why Compliance Matters for macOS Admins
 
 With macOS, Apple continues to enhance security and streamline device management. However, these changes introduce new challenges for IT teams, particularly in verifying security configurations and compliance policies.
 
@@ -21,7 +21,7 @@ This lightweight shell script allows IT teams to quickly verify key security con
 
 ---
 
-### What Does the Compliance Checker Verify?
+## What Does the Compliance Checker Verify?
 
 The script performs local security checks and provides a simple report on essential macOS security settings:
 
@@ -32,7 +32,7 @@ The script performs local security checks and provides a simple report on essent
 ✅ Gatekeeper – Confirms app security settings for safe software execution.  
 ✅ Platform SSO – Detects if macOS is integrated with a federated identity provider (e.g., Entra ID).
 
-### Why This is Useful
+## Why This is Useful
 
 -   **Instant Compliance Checks** – No need to rely on MDM dashboards; this runs locally.
 -   **Quick Troubleshooting** – Identify misconfigurations in seconds.
@@ -40,13 +40,13 @@ The script performs local security checks and provides a simple report on essent
 
 ---
 
-### How It Works
+## How It Works
 
 The script runs directly on a macOS device and provides an easy-to-read GUI-based report using AppleScript dialogs.
 
-![](/images/posts/local-macos-compliance-checker/ComplianceChecker-1009x1024.png)
+![Compliance Checker dialog on macOS showing SIP, FileVault, Firewall, Gatekeeper and Platform SSO all enabled](/images/posts/local-macos-compliance-checker/ComplianceChecker-1009x1024.png)
 
-### The script – save it as: CheckCompliance.sh
+## The script – save it as: CheckCompliance.sh
 
 ```bash
 #!/bin/bash

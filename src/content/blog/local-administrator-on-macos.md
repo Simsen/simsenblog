@@ -34,7 +34,7 @@ You can setup a freeplan tenant with 25 licenses – which is a great idea to ac
 
 A new and very important feature for Admin by Request on MacOS is support for Azure AD groups. We will get back to details on how it looks.
 
-![](/images/posts/local-administrator-on-macos/AbR-AzureADConnector-1024x499.png)
+![Admin By Request Mac Global Settings, Azure AD tab, with Azure AD Connector enabled for the tenant and state Functional](/images/posts/local-administrator-on-macos/AbR-AzureADConnector-1024x499.png)
 
 ---
 
@@ -42,24 +42,24 @@ A new and very important feature for Admin by Request on MacOS is support for Az
 
 Go to download – and get the Client for Mac.
 
-![](/images/posts/local-administrator-on-macos/AbR-Download-1024x149.png)
+![Admin By Request portal Download Client for Mac panel offering Admin By Request for Mac 4.0](/images/posts/local-administrator-on-macos/AbR-Download-1024x149.png)
 
 When click Download – the agent will be created for your tenant. So no special parameters or login after. This package is for **YOUR** tenant.
 
-![](/images/posts/local-administrator-on-macos/AbR-Download2.png)
+![Admin By Request portal building the tenant-specific Mac package, noting it must be co-signed by Apple (up to 15 minutes)](/images/posts/local-administrator-on-macos/AbR-Download2.png)
 
 ---
 
 ## 4\. Prepare Admin by Request – Mac Global Settings
 
-<table class="layout-table"><tbody><tr><td>When login to Admin by Request admin portal<br><br>Go to: Settings.<br><br>From settings – you can see:<br><br>Windows Settings – Global Windows settings<br>Windows Sub Settings – Settings assigned to a group<br><br>Mac Settings – Global Mac setting<br>Mac Sub Setting – Settings assigned to a group<br><br>Global settings – is like fallback, if no sub settings is matching</td><td><img src="/images/posts/local-administrator-on-macos/abr_Menu.png" alt=""><br></td></tr></tbody></table>
+<table class="layout-table"><tbody><tr><td>When login to Admin by Request admin portal<br><br>Go to: Settings.<br><br>From settings – you can see:<br><br>Windows Settings – Global Windows settings<br>Windows Sub Settings – Settings assigned to a group<br><br>Mac Settings – Global Mac setting<br>Mac Sub Setting – Settings assigned to a group<br><br>Global settings – is like fallback, if no sub settings is matching</td><td><img src="/images/posts/local-administrator-on-macos/abr_Menu.png" alt="Admin By Request portal Settings menu listing Windows Settings, Windows Sub Settings, Mac Settings and Mac Sub Settings"><br></td></tr></tbody></table>
 
 ### Set Global Mac settings
 
-![](/images/posts/local-administrator-on-macos/abr_Global_mac_settings-1024x747.png)
+![Mac Global Settings Authorization tab with Allow Run As Admin and Allow Admin Sessions both set to Off](/images/posts/local-administrator-on-macos/abr_Global_mac_settings-1024x747.png)
 *Set both to off*
 
-![](/images/posts/local-administrator-on-macos/abr_Global_mac_settings2-1024x468.png)
+![Mac Global Settings Lockdown tab with Revoke admin rights set to Off](/images/posts/local-administrator-on-macos/abr_Global_mac_settings2-1024x468.png)
 *Revoke admin rights – Set to Off  
 When Admin by Request is installed – it will not have any effect.*
 
@@ -72,7 +72,7 @@ When Admin by Request is installed – it will not have any effect.*
 Go to: https://intune.microsoft.com > Apps > MacOS > + Add > **Line-of-business app**.  
 I will then assign the app to All devices with a filter or a specific Azure AD group.
 
-![](/images/posts/local-administrator-on-macos/AbR-IntuneApp-569x1024.png)
+![Intune Add App wizard for a macOS line-of-business app, uploading Admin By Request 4.0 pkg with bundle ID com.fasttracksoftware.adminbyrequest](/images/posts/local-administrator-on-macos/AbR-IntuneApp-569x1024.png)
 
 ### Install from Shell script
 
@@ -84,13 +84,13 @@ If you onboard your Mac from Apple Business Manager – and want to have Admin b
 
 Admin by Request now show up in Company Portal.
 
-![](/images/posts/local-administrator-on-macos/AbR_CompanyPortal-1024x792.png)
+![Company Portal for Mac showing Admin By Request 4.0 available to install](/images/posts/local-administrator-on-macos/AbR_CompanyPortal-1024x792.png)
 
 After Installation – Admin by Request will show in tool menu (Upper-right-corner)  
 When the icon is RED – user is still local administrator all the time and Admin by Request policy is not enforced yet.  
 This is because we set our Global Mac settings to NOT revoke Admin rights.
 
-![](/images/posts/local-administrator-on-macos/Skaermbillede-2023-06-04-kl.-10.13.03.png)
+![Red Admin By Request menu bar icon reporting the user is logged in as administrator, so the policy is not yet enforced](/images/posts/local-administrator-on-macos/Skaermbillede-2023-06-04-kl.-10.13.03.png)
 
 ---
 
@@ -98,36 +98,36 @@ This is because we set our Global Mac settings to NOT revoke Admin rights.
 
 Now we will create a Mac sub setting that target our Mac.
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_1-1-1024x305.png)
+![Admin By Request Mac sub settings page with an empty list and the New button highlighted](/images/posts/local-administrator-on-macos/abr-subsetting_1-1-1024x305.png)
 *Click New*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_2-1-1024x370.png)
+![New Mac sub setting named 'Office User' being entered, with Update highlighted](/images/posts/local-administrator-on-macos/abr-subsetting_2-1-1024x370.png)
 *Insert name – and click Update*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_3-1-1024x292.png)
+![Mac sub settings list showing 'Office User (Inactive)' with the Edit link highlighted](/images/posts/local-administrator-on-macos/abr-subsetting_3-1-1024x292.png)
 *Click Edit on the new sub setting*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_4-1-1024x563.png)
+![Office User sub setting scope with computer group AAD_AdminByRequest_OfficeSettings, Active set to On and Save highlighted](/images/posts/local-administrator-on-macos/abr-subsetting_4-1-1024x563.png)
 *Set Active to On  
 Insert Azure AD group (Remember to add the mac to this group)  
 Click Save*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_5-1024x566.png)
+![Office User Authorization settings overruling global settings, with Run As Admin, Admin Sessions and Require reason on and 15-minute access time](/images/posts/local-administrator-on-macos/abr-subsetting_5-1024x566.png)
 *Go to: **Authorization**  
 Set it to Overrule global settings  
 Activate as showed and click Save*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_6-2-1024x525.png)
+![Office User Endpoint branding overruling global settings, with logo file on and company name set to 'Office'](/images/posts/local-administrator-on-macos/abr-subsetting_6-2-1024x525.png)
 *Go to: **Endpoint**  
 Set it to Overrule global settings  
 I recommend to set policy name as Company name.(Will show later why)*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_7-1-1024x535.png)
+![Office User Lockdown Admin Rights tab overruling global settings with Revoke admin rights set to On](/images/posts/local-administrator-on-macos/abr-subsetting_7-1-1024x535.png)
 *Go to: **Lockdown**  
 Set it to Overrule global settings  
 Set Revoke admin rights to On*
 
-![](/images/posts/local-administrator-on-macos/abr-subsetting_8-1024x526.png)
+![Office User Lockdown SUDO tab overruling global settings, with Allow sudo terminal commands left Off](/images/posts/local-administrator-on-macos/abr-subsetting_8-1024x526.png)
 *Under **Lockdown** go to the other tab: **SUDO**  
 Consider if you want to enable this – user will be able to uninstall Admin by Request agent*
 
@@ -135,19 +135,19 @@ Consider if you want to enable this – user will be able to uninstall Admin by 
 
 ## 8\. Now check Admin by Request agent on the Mac
 
-![](/images/posts/local-administrator-on-macos/abr-PolicyApplied.png)
+![Admin By Request menu bar icon on the Mac offering Request administrator access once the policy is applied](/images/posts/local-administrator-on-macos/abr-PolicyApplied.png)
 *Click Request administrator access*
 
-![](/images/posts/local-administrator-on-macos/Screenshot-2023-06-04-at-19.31.19.png)
+![Administrator Access prompt asking to start an administrator session, branded with the sub-setting name 'Office'](/images/posts/local-administrator-on-macos/Screenshot-2023-06-04-at-19.31.19.png)
 *Click Yes  
 Under the logo – you can also see it is the name of the sub-setting: Office  
 Normally it would be Company name.  
 When you have multiple profiles and need to troubleshoot this is handy.*
 
-![](/images/posts/local-administrator-on-macos/Screenshot-2023-06-04-at-19.31.12.png)
+![Request Administrator Access form with email, phone and reason 'Install Jabra application' for the audit log](/images/posts/local-administrator-on-macos/Screenshot-2023-06-04-at-19.31.12.png)
 *Type in justification to the Audit log – why you elevated to Administrator access*
 
-![](/images/posts/local-administrator-on-macos/abr-countdown.png)
+![Admin By Request administrator session window counting down from 15 minutes, with a Finish button](/images/posts/local-administrator-on-macos/abr-countdown.png)
 *15min countdown for multiple tasks.*
 
 ---
@@ -156,4 +156,4 @@ When you have multiple profiles and need to troubleshoot this is handy.*
 
 From the Admin by Request admin portal – we now have full audit of what has been installed.
 
-![](/images/posts/local-administrator-on-macos/abr-fullaudit-1024x441.png)
+![Admin By Request audit log entry showing the user, reason, Office User setting and Jabra software installed during the session](/images/posts/local-administrator-on-macos/abr-fullaudit-1024x441.png)

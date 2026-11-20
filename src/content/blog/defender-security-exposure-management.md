@@ -46,11 +46,11 @@ A key feature of Defender Security Exposure Management is Attack Path Management
 -   Choke Points: Identifies key assets where multiple attack paths intersect, making them critical vulnerabilities. By focusing on these choke points, security teams can effectively mitigate risk by addressing high-impact assets and preventing attackers from advancing through multiple paths.
 -   Blast Radius: Enables visualization of how compromising one asset can impact other parts of the network. This helps assess the broader consequences of an attack and prioritize mitigation strategies more effectively.
 
-![](/images/posts/defender-security-exposure-management/Screenshot-2025-03-27-at-09.48.46-1024x874.png)
+![Defender attack path map from a vulnerable device to an Admin account, with the Top Vulnerabilities list of critical CVEs](/images/posts/defender-security-exposure-management/Screenshot-2025-03-27-at-09.48.46-1024x874.png)
 
 By implementing Attack Path Management, organizations can shift from a reactive to a proactive security strategy, where they not only focus on individual vulnerabilities, but also understand and disrupt potential attack paths before they are exploited.
 
-![](/images/posts/defender-security-exposure-management/splitter-1024x109.png)
+![Decorative divider of green binary code](/images/posts/defender-security-exposure-management/splitter-1024x109.png)
 
 ---
 
@@ -77,9 +77,9 @@ To provide a structured view of an organization’s security posture, Microsoft 
     -   Analyzes current access policies and suggests improvements.
     -   Implements principles of least privilege and micro-segmentation.
 
-![](/images/posts/defender-security-exposure-management/SEM1-1024x651.png)
+![Exposure Management Initiatives page in Defender with the Zero Trust (Foundational) initiative highlighted](/images/posts/defender-security-exposure-management/SEM1-1024x651.png)
 
-![](/images/posts/defender-security-exposure-management/SEM2-1024x644.png)
+![Zero Trust (Foundational) initiative at 53% with its Security recommendations tab listing non-compliant actions](/images/posts/defender-security-exposure-management/SEM2-1024x644.png)
 
 ## What does this mean for security leaders?
 

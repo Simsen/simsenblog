@@ -31,39 +31,39 @@ The modern endpoint community has also tried to solve this with Proactive Remedi
 
 ---
 
-#### How it works:
+## How it works:
 
 1.  When Admin by Request version 7.3 is installed – Break Glass menu show up on the left side.  
     Here we will click Generate Account
 
-![](/images/posts/laps-for-autopilot-device/Abr1_-1024x483.png)
+![Admin By Request portal Break Glass page with expiry set to 2 hours and the Generate Account button](/images/posts/laps-for-autopilot-device/Abr1_-1024x483.png)
 *Here you can generate account for 15min, 30min, 1 hour, 2 hour, 4 hour, 8 hour or unlimited.*
 
 2.  It will live update on the right side – when account is created on the endpoint.
 
-![](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-19.57.06-1024x628.png)
+![Generated Break Glass credentials in the Admin By Request portal with status 'Waiting for endpoint'](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-19.57.06-1024x628.png)
 
 3.  To trigger an update on the client – try to logon. First time it will say incorrect.  
     But this will trigger AbR agent to update – and create the profile.
 
-![](/images/posts/laps-for-autopilot-device/sidebyside-1024x547.jpg)
+![Windows sign-in with the Break Glass account, and the first attempt rejected as an incorrect username or password](/images/posts/laps-for-autopilot-device/sidebyside-1024x547.jpg)
 
 4.  This will be seen in the portal like this.
 
-![](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-19.58.36-1024x634.png)
+![Admin By Request portal showing the Break Glass account status changed to 'Ready to log on'](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-19.58.36-1024x634.png)
 
 5.  Now we will logon again with same username and password.  
     AbR also change the background – so we are sure this is the Break Glass Mode
 
-![](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.08.08-1024x827.png)
+![Windows desktop with the Admin By Request Break Glass Mode background, logout time and a command prompt as the account](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.08.08-1024x827.png)
 
 6.  With this user I have installed Notepad++ – this is visible in the AbR portal.
 
-![](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.13.38-1024x826.png)
+![Admin By Request audit entry showing the Break Glass account installing Notepad++ 8.2.1 with elevated rights](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.13.38-1024x826.png)
 
 7.  Last thing – I have the overview of who created the Break Glass account, when it was used and when it was removed again.
 
-![](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.20.12-1024x268.png)
+![Break Glass Account Events log showing the account issued, created, logged on and removed](/images/posts/laps-for-autopilot-device/Screenshot-2022-02-13-at-20.20.12-1024x268.png)
 
 This is very strong – and I actually also see this as very useful solution in a server environment. So Admins need to create an account for the specific server before they can logon – and everything that trigger UAC/Administrator is in the Audit log.  
   

@@ -44,7 +44,7 @@ Now the experience is much more integrated:
 -   Immediate access to apps and company resources
 -   A more native macOS experience overall
 
-![](/images/posts/platform-sso-v2-now-integrated-into-macos-ade/CP_ADE-1024x762.png)
+![macOS Setup Assistant Single Sign-On for Mac screen showing Platform SSO registration during Automated Device Enrollment](/images/posts/platform-sso-v2-now-integrated-into-macos-ade/CP_ADE-1024x762.png)
 *Platform SSO – now part of Automated Device Enrollment*
 
 For cloud-native macOS deployments with Intune, this is a pretty big UX improvement.

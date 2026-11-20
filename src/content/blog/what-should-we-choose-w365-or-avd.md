@@ -24,7 +24,7 @@ Simon what is difference between W365 and AVD and what should we choose? – I w
 
 ---
 
-![](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
+![Windows 365 logo](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
 
 ### Scenario 1:
 
@@ -46,7 +46,7 @@ Moreover, to optimize costs in an AVD setup, you would need to manage the turn-o
 
 ---
 
-![](/images/posts/what-should-we-choose-w365-or-avd/AVD_mellem_logo-1024x107.png)
+![Azure Virtual Desktop logo](/images/posts/what-should-we-choose-w365-or-avd/AVD_mellem_logo-1024x107.png)
 
 ### Scenario 2:
 
@@ -65,7 +65,7 @@ It’s crucial, however, to restrict users from accessing the full desktop exper
 
 ---
 
-![](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
+![Windows 365 logo](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
 
 ### Scenario 3:
 
@@ -83,7 +83,7 @@ Another significant benefit of Windows 365 is the self-service restore feature. 
 
 ---
 
-![](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
+![Windows 365 logo](/images/posts/what-should-we-choose-w365-or-avd/W365_mellem_logo-1-1024x107.png)
 
 ### Scenario 4:
 
@@ -97,7 +97,7 @@ Actually I will say that AVD with personal VMs should be removed – unless ther
 
 ---
 
-![](/images/posts/what-should-we-choose-w365-or-avd/AVD_mellem_logo-1024x107.png)
+![Azure Virtual Desktop logo](/images/posts/what-should-we-choose-w365-or-avd/AVD_mellem_logo-1024x107.png)
 
 ### Scenario 5:
 
@@ -121,5 +121,5 @@ For instance, you can enforce multi-factor authentication (MFA) and apply condit
 
 At the moment, you cannot add W365 or AVDs from multiple tenants in same app. Here I found that Microsoft released [**Microsoft Remote Desktop in App Store**](https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12) – and then you can download [**Beta version of Microsoft Remote Desktop**](https://install.appcenter.ms/orgs/rdmacios-k2vy/apps/microsoft-remote-desktop-for-mac/distribution_groups/all-users-of-microsoft-remote-desktop-for-mac) – with 2 apps, you can add W365 or AVDs from 2 tenants.
 
-<table class="layout-table"><tbody><tr><td><a href="https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12"><strong>Microsoft Remote Desktop in App Store</strong></a></td><td><img src="/images/posts/what-should-we-choose-w365-or-avd/RemoteDesktop2.png" alt=""></td><td><a href="https://install.appcenter.ms/orgs/rdmacios-k2vy/apps/microsoft-remote-desktop-for-mac/distribution_groups/all-users-of-microsoft-remote-desktop-for-mac"><strong>Beta version of Microsoft Remote Desktop</strong></a></td></tr></tbody></table>
+<table class="layout-table"><tbody><tr><td><a href="https://apps.apple.com/us/app/microsoft-remote-desktop/id1295203466?mt=12"><strong>Microsoft Remote Desktop in App Store</strong></a></td><td><img src="/images/posts/what-should-we-choose-w365-or-avd/RemoteDesktop2.png" alt="Microsoft Remote Desktop beta and App Store app icons"></td><td><a href="https://install.appcenter.ms/orgs/rdmacios-k2vy/apps/microsoft-remote-desktop-for-mac/distribution_groups/all-users-of-microsoft-remote-desktop-for-mac"><strong>Beta version of Microsoft Remote Desktop</strong></a></td></tr></tbody></table>
 

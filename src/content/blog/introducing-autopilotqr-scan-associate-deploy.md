@@ -102,7 +102,7 @@ Using AutopilotQR is pretty straightforward:
 5.  Scan the QR code and select your Device Preparation policy.
 6.  Associate the device with your Intune tenant.
 
-![](/images/posts/introducing-autopilotqr-scan-associate-deploy/screenshot_autopilotQR-930x1024.png)
+![AutopilotQR web app showing Sign in with Microsoft and the four steps to pre-associate a Windows device by QR code](/images/posts/introducing-autopilotqr-scan-associate-deploy/screenshot_autopilotQR-930x1024.png)
 
 That’s it! No CSV exports, USB drives, or PowerShell scripts.
 

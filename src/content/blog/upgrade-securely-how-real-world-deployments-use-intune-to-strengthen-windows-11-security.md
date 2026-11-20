@@ -11,7 +11,7 @@ wordpress:
   categories: [endpoint-manager]
 ---
 
-### 1\. Reframing the upgrade as a security opportunity
+## 1\. Reframing the upgrade as a security opportunity
 
 > When planning Windows 11 migrations, most organizations focus on application and hardware readiness — and that remains a critical foundation for any successful rollout. However, the most transformative upgrades happen when IT teams use this opportunity to harden and modernize endpoint configurations, turning “upgrade day” into a true security milestone. In this article, I’ll explain what a security milestone really means: the key areas and protections that define a hardened Windows 11 environment, and how these measures ensure a secure and future-ready upgrade.
 
@@ -31,7 +31,7 @@ Key steps:
 
 ---
 
-### 3\. Turn on the new Windows 11 security policies
+## 3\. Turn on the new Windows 11 security policies
 
 Windows 11 introduces several policies that close long-standing attack paths. These can all be enforced directly via Intune Settings Catalog or the latest Security Baseline.
 
@@ -47,7 +47,7 @@ Windows 11 introduces several policies that close long-standing attack paths. Th
 
 ---
 
-### 4\. Field insights: What we learned in practice
+## 4\. Field insights: What we learned in practice
 
 In a regulated environment, the migration team realized that many users were still local admins — blocking the enablement of key Windows 11 protections like Smart App Control. Moving admin rights to Just-in-Time elevation via Endpoint Privilege Management allowed full adoption without breaking productivity.
 
@@ -57,16 +57,16 @@ In another case, upgrading lab PCs with older GPO-driven settings caused inconsi
 
 ---
 
-![](/images/posts/upgrade-securely-how-real-world-deployments-use-intune-to-strengthen-windows-11-security/image.png)
+![A ThinkPad running Windows 10 next to one running Windows 11, illustrating the upgrade](/images/posts/upgrade-securely-how-real-world-deployments-use-intune-to-strengthen-windows-11-security/image.png)
 
 ---
 
-### 5\. Measure and prove the improvement
+## 5\. Measure and prove the improvement
 
 After the upgrade, use Intune’s **Security Baseline reporting** and **Endpoint Analytics** to show tangible progress: fewer drifted settings, more devices meeting baseline, and better Secure Score. Turning data into insight makes the project measurable — and helps justify future investments in automation and security.
 
 ---
 
-### 6\. Closing thoughts
+## 6\. Closing thoughts
 
 A Windows 11 upgrade is not just about OS versioning — it’s a **reset button for your endpoint security posture**. By combining Intune, the new Windows 11 security features, and lessons from real-world deployments, organizations can achieve both modernization and measurable risk reduction in one step.

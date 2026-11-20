@@ -132,7 +132,7 @@ Prepare policies
 
 1.  I have created 16 Attack Surface Reduction Rules policies in Intune – each policy for each ASR Rule.
 
-![](/images/posts/asr-rules-anno-2023/ASR_Rules-1024x547.png)
+![Intune list of 16 Attack Surface Reduction policies, one per ASR rule, for Windows 10 and later](/images/posts/asr-rules-anno-2023/ASR_Rules-1024x547.png)
 
 2.  I have created 2 Sets – Above policies is exported to JSON files, ready to be imported to your tenant
     -   [Download all policies as in Audit mode](/Files/ASR_AuditMode.zip)
@@ -153,7 +153,7 @@ DeviceEvents
 
 It gives your a good overview on how the landscape is:
 
-![](/images/posts/asr-rules-anno-2023/ASR_Overview.png)
+![Defender advanced hunting results counting ASR events by ActionType, such as AsrOfficeCommAppChildProcessBlocked](/images/posts/asr-rules-anno-2023/ASR_Overview.png)
 
 Then you can dive deeper into what each ASR Rule – to get computer names
 
@@ -168,7 +168,7 @@ DeviceEvents
 
 If you want to test or troubleshoot directly on a single PC – how the ASR tool could block a process. I can recommend this small [powershell GUI from hemaurer](https://github.com/hemaurer/MDATP_PoSh_Scripts/tree/master/ASR%20GUI)
 
-![](/images/posts/asr-rules-anno-2023/ASR_Gui.png)
+![ASR Rules PoSh GUI listing each Attack Surface Reduction rule with Disabled, Audit, Enabled and Warn options](/images/posts/asr-rules-anno-2023/ASR_Gui.png)
 
 ---
 

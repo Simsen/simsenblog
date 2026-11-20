@@ -120,7 +120,7 @@ But when done correctly, that is not the experience.
 
 On the contrary, proper management can make onboarding, security, and operations easier without destroying what makes Mac a great work device in the first place.
 
-![](/images/posts/why-mac-is-not-as-scary-as-it-thinks-a-personal-perspective/image.png)
+![Diagram of Mac zero trust principles: Apple silicon, SSO, software updates, zero-touch deployment and Endpoint Security](/images/posts/why-mac-is-not-as-scary-as-it-thinks-a-personal-perspective/image.png)
 
 ## IT needs to challenge its own skepticism
 

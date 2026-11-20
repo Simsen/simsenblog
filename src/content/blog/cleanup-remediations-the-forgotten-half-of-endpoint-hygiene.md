@@ -51,7 +51,7 @@ Intune does provide a native way to clean up the Downloads folder using **Storag
 
 You can configure a policy like:
 
-![](/images/posts/cleanup-remediations-the-forgotten-half-of-endpoint-hygiene/cleanup_download_recyclebin.png)
+![Intune Storage Sense settings with Downloads cleanup threshold 60 days and Recycle Bin cleanup threshold 30 days](/images/posts/cleanup-remediations-the-forgotten-half-of-endpoint-hygiene/cleanup_download_recyclebin.png)
 
 This is a solid baseline and easy to roll out across all devices.
 

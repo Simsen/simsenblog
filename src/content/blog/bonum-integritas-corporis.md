@@ -18,7 +18,7 @@ For that reason I have implemented a simple and successful patch flow – that i
 -   5 days in test – with deadline as soon as possible.
 -   5 days in production – with deadline the last day.
 
-![](/images/posts/bonum-integritas-corporis/patchflow8_18_28-1024x130.png)
+![Patch calendar for April and May showing three waves, each with five test days followed by five production days](/images/posts/bonum-integritas-corporis/patchflow8_18_28-1024x130.png)
 
 To manage this – I have configured 9 Automatic Deployment Rules(ADR) for:
 
@@ -28,20 +28,20 @@ To manage this – I have configured 9 Automatic Deployment Rules(ADR) for:
 
 On each ADR – I have added an extra deployment to the Production collection. So when a make the ADR I point to the Test collection.
 
-![](/images/posts/bonum-integritas-corporis/patch_ADR-1024x680.png)
+![Configuration Manager Automatic Deployment Rules list with the Windows 10 ADR deployed to Test and Prod collections](/images/posts/bonum-integritas-corporis/patch_ADR-1024x680.png)
 
 For Windows 10 ADR – this is the same filter on all 3:
 
-![](/images/posts/bonum-integritas-corporis/Win10_ADR-1024x998.png)
+![Windows 10 ADR search criteria: x64, Windows 10 products, required, not superseded, Microsoft security and critical updates](/images/posts/bonum-integritas-corporis/Win10_ADR-1024x998.png)
 
 For Other ADR – this is the same filter on all 3:
 
-![](/images/posts/bonum-integritas-corporis/Other_ADR-1024x998.png)
+![Other ADR search criteria covering Edge, older Office, Silverlight and Visual Studio updates that are required and not superseded](/images/posts/bonum-integritas-corporis/Other_ADR-1024x998.png)
 
 For Office 365 ADR – again, same filter on all 3:
 
-![](/images/posts/bonum-integritas-corporis/Office_ADR-1024x998.png)
+![Office 365 ADR search criteria: product Office 365 Client, required and not superseded](/images/posts/bonum-integritas-corporis/Office_ADR-1024x998.png)
 
 Here you see my Patch Management collection view – and the reason I have created a collection for each ADR group – is only if I like to manage who get what updates.
 
-![](/images/posts/bonum-integritas-corporis/PatchManagement_collections-1024x486.png)
+![Configuration Manager Patch Management folder with Test and Prod device collections for each ADR group](/images/posts/bonum-integritas-corporis/PatchManagement_collections-1024x486.png)

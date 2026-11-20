@@ -11,7 +11,7 @@ wordpress:
   categories: [endpoint-manager, macos, shell]
 ---
 
-### Run On-Demand Scripts via Intune with a Dummy PKG
+## Run On-Demand Scripts via Intune with a Dummy PKG
 
 **Ever wished you could give users the ability to run a script from the Company Portal?**  
 Whether it’s installing an app via Installomator, triggering a cleanup, or running a custom fix script — it’s all possible by wrapping your logic into a script and using a dummy package.
@@ -22,7 +22,7 @@ And yes — it works beautifully on macOS.
 
 ---
 
-### Why use a dummy package?
+## Why use a dummy package?
 
 macOS in Intune requires .pkg format for app deployments. But what if you don’t want to install an app — just run a script?
 
@@ -41,7 +41,7 @@ Use cases include:
 
 ---
 
-### Create the dummy PKG file
+## Create the dummy PKG file
 
 Step 1 – Download the tool to make the PKG dummy package
 
@@ -50,35 +50,35 @@ Can be used for Trial mode, as we will not see the wizard, but 25$
 
 Step 2 – Open to and fill out: Name, Identifier and Version
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_Dummy-1024x734.png)
+![Packages app installer settings with Name 'Adobe Reader DC', identifier com.simsen.adobereader and version 1](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_Dummy-1024x734.png)
 
 Step 3 – Click on the hammer, to save the **pkgbuilder** project
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_DummySave-1024x734.png)
+![Packages app with the hammer build button highlighted to save the pkgbuilder project](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_DummySave-1024x734.png)
 
 Step 4 – Click on the hammer again, to save as a PKG file
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_DummySavePKG-1024x675.png)
+![Saved AdobeReaderDC.pkgbuilder project with the hammer button highlighted to build the PKG file](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_DummySavePKG-1024x675.png)
 
 Step 5 – Click Close – and you now have a dummy PKG file we can use.
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_done-1-1024x675.png)
+![Packages build log with the 'Building Installer Package Succeeded' dialog and its Close button highlighted](/images/posts/run-scripts-on-demand-from-company-portal/AdobeReaderDC_done-1-1024x675.png)
 
 ---
 
-### Prepare the package / Script in Intune and assign it.
+## Prepare the package / Script in Intune and assign it.
 
 Step 6 – In Intune > Apps > macOS > Click Create and Select
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.48.38.png)
+![Intune Select app type list with 'macOS app (PKG)' highlighted](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.48.38.png)
 
 Step 7 – Click Select app package file. Now select the dummy package
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.49.52-1024x264.png)
+![Intune Add App wizard for a macOS PKG with the 'Select app package file' link highlighted](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.49.52-1024x264.png)
 
 Step 8 – Insert Publisher, Select Logo and Click Next
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.25.29-996x1024.png)
+![Intune App information step with name 'Adobe Reader DC (Script)', publisher Adobe and the Acrobat logo set](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.25.29-996x1024.png)
 
 Step 9 – Copy the code this code:
 
@@ -94,22 +94,22 @@ sudo /usr/local/bin/Installomator adobereaderdc DEBUG=0
 Step 10 – Insert the code under Pre-Install script, Click Next  
 All these Apps from Installomator can be used: [https://github.com/Installomator/Installomator/blob/main/Labels.txt](https://github.com/Installomator/Installomator/blob/main/Labels.txt)
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.57.38-1024x988.png)
+![Intune Program step with a pre-install script that downloads Installomator and runs the adobereaderdc label](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-22.57.38-1024x988.png)
 
 Step 11 – Select Minimum operation system that match your need.
 
 Step 12 – Detection rules  
 Here you can remove the last part of the App Bundle ID – so it only has this: **com.simsen.adobereader**
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.03.20-1024x637.png)
+![Intune Detection rules step with the generated app bundle ID suffix on com.simsen.adobereader pointed out for removal](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.03.20-1024x637.png)
 
 Step 13 – Now assign to All users as Available for enrolled devices and Click Next
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.06.51-1024x649.png)
+![Intune Assignments step with All users included as Available for enrolled devices](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.06.51-1024x649.png)
 
 Step 14 – Verify all settings and Click Create
 
-![](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.27.21-658x1024.png)
+![Intune Review + create summary for the Adobe Reader DC (Script) PKG app with the Create button highlighted](/images/posts/run-scripts-on-demand-from-company-portal/Screenshot-2025-04-06-at-23.27.21-658x1024.png)
 
 Step 15 – Now user can run the app/script, when they need it.  
 Instead of an app – it could be all kinds of scripts that do self-service for user.  

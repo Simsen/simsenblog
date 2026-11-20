@@ -82,5 +82,5 @@ if($uefi){
 Write-Host ($outputArr -join " // ")
 ```
 
-![](/images/posts/bios-check-from-mem/ProactiveRemediation_BIOS-1024x251.png)
+![Remediation detection output for BIOS Settings Compliance reporting TPM enabled but Secure Boot and UEFI disabled](/images/posts/bios-check-from-mem/ProactiveRemediation_BIOS-1024x251.png)
 *Secure Boot is disabled 🙁*

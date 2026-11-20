@@ -3,8 +3,10 @@ import { SOCIALS } from '../lib/site';
 
 interface Props {
   class?: string;
+  /** Screen-reader name; must differ when the links appear twice on one page. */
+  label?: string;
 }
-const { class: className } = Astro.props;
+const { class: className, label = 'Find me elsewhere' } = Astro.props;
 
 // Brand marks, 24×24 viewBox, drawn with currentColor.
 const ICONS: Record<string, string> = {
@@ -18,7 +20,7 @@ const ICONS: Record<string, string> = {
 };
 ---
 
-<nav class:list={['socials', className]} aria-label="Find me elsewhere">
+<nav class:list={['socials', className]} aria-label={label}>
   {
     SOCIALS.map((s) => (
       <a href={s.url} aria-label={s.label} title={s.label} rel="me noopener">

@@ -19,7 +19,7 @@ In our first article, we explored the concept of the AI PC and what it means whe
 
 Because if AI is a new runtime, where should it run? In the cloud, on the device, or both? Which approach makes the most sense for you, your users, and your data?  Most people are now familiar with cloud-based solutions like ChatGPT, Microsoft Copilot, or Apple Intelligence. What far fewer people realize is that it is now possible to run advanced AI models locally — without subscriptions, without logging, and without the cloud.
 
-![](/images/posts/ai-pc-part-2/image.png)
+![App icons of AI tools including Apple Intelligence, Copilot, ChatGPT, Gemini, Perplexity, DeepSeek and Ollama](/images/posts/ai-pc-part-2/image.png)
 
 ## What is Foundry Local?
 

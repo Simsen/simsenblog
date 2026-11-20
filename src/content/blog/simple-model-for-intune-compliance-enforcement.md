@@ -77,7 +77,7 @@ Configured setting:
 
 ### How it could look in Intune:
 
-![](/images/posts/simple-model-for-intune-compliance-enforcement/Screenshot-2026-03-30-at-18.10.08.png)
+![Intune Windows compliance policies split into Defender Secure Score, OS version and Security policies](/images/posts/simple-model-for-intune-compliance-enforcement/Screenshot-2026-03-30-at-18.10.08.png)
 
 ---
 
@@ -140,7 +140,7 @@ If you have machines that is not compliant – because it is drifting from polic
 Remediation script can be used to enforce policies as another option from the policy itself.  
 Get my Remediation scripts on my Github page
 
-[![](/images/posts/simple-model-for-intune-compliance-enforcement/github-logo.png)](https://github.com/Simsen/RemediationScript-CompliancePolicy)
+[![RemediationScript-CompliancePolicy on GitHub](/images/posts/simple-model-for-intune-compliance-enforcement/github-logo.png)](https://github.com/Simsen/RemediationScript-CompliancePolicy)
 
 ---
 

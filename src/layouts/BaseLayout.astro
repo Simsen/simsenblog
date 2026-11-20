@@ -72,10 +72,11 @@ const transitions = String.raw`(() => {
     <InlineScript code={transitions} />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <slot name="before" />
     <div class="wrap">
       <Header active={active} />
-      <main>
+      <main id="main" tabindex="-1">
         <slot />
       </main>
       <Footer />

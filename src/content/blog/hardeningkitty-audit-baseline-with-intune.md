@@ -11,13 +11,13 @@ wordpress:
   categories: [endpoint-manager, powershell]
 ---
 
-### Introduction
+## Introduction
 
 In this blog, I will explore how to leverage HardeningKitty in conjunction with Intune, enabling us to remotely audit our clients and ensure they meet our security baseline. By integrating HardeningKitty with Intune, we can automate the process of security auditing, streamline the management of audit reports, and confirm that our organizational security standards are consistently met. This approach not only enhances our cybersecurity posture but also simplifies the monitoring and enforcement of security policies across the board. Join me as we delve into setting up HardeningKitty with Intune, aiming for a robust, efficient way to keep our digital environments secure and compliant.
 
 **What is HardeningKitty**: HardeningKitty is a powerful tool for Windows security hardening, automating the application of best practice configurations and policies to enhance system security and compliance efficiently. [Link to Github](https://github.com/scipag/HardeningKitty)
 
-### Functions in the script
+## Functions in the script
 
 In this section, we delve into the technical workings of the script, highlighting its key functionalities and how they contribute to the seamless integration of HardeningKitty with Microsoft Intune for enhanced security management:
 
@@ -30,7 +30,7 @@ In this section, we delve into the technical workings of the script, highlightin
 **FindAndDisplayHardeningKittyScore**: Extracts and displays the overall security score from the audit log, providing a quick snapshot of the system’s security status. This function is instrumental in the pre-remediation detection phase, offering immediate visibility into the effectiveness of existing security configurations.  
 Ex.: “Your HardeningKitty score is: 3.27. HardeningKitty Statistics: Total checks: 391 – Passed: 86, Low: 62, Medium: 243, High: 0.”
 
-### Setup script in Microsoft Intune
+## Setup script in Microsoft Intune
 
 -   Copy script to your code editor – save it as Detection.ps1
 -   Go to Intune > Devices > Scripts and remediations
@@ -153,17 +153,17 @@ CopyHardeningKittyLogs
 FindAndDisplayHardeningKittyScore
 ```
 
-### Collect status
+## Collect status
 
 After script has run on the client – you have 2 options to get status
 
-### Option 1
+## Option 1
 
 -   See “Pre-remediation detection output” on the Remediation script.
 -   You need to activate the Colum under the Remediation Script > Columns > Select: Pre-remediation detection output
 -   It will here show: Your HardeningKitty score is……
 
-### Option 2
+## Option 2
 
 -   Go to the Windows client in Intune
 -   Click **Collect diagnostics** (will take a around 15 min)

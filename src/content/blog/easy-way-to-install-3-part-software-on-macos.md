@@ -52,15 +52,15 @@ sudo /usr/local/bin/Installomator adobereaderdc DEBUG=0
 
 #### 3\. Click Add > macOS
 
-![](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.45.44.png)
+![Intune Scripts and remediations, Platform scripts tab with Add expanded and macOS selected](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.45.44.png)
 
 #### 4\. Insert Name and Click Next
 
-![](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.46.38.png)
+![Intune Add script wizard for macOS with the name MAC_Install_AdobeReaderDC entered on the Basics tab](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.46.38.png)
 
 #### 5\. Insert Script and select following options – Click Next
 
-![](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.59.25.png)
+![Intune macOS script settings with an Installomator script for Adobe Reader DC, run as root and retry set to 3 times](/images/posts/easy-way-to-install-3-part-software-on-macos/Screenshot-2025-03-11-at-22.59.25.png)
 
 #### 6\. Assign to User or Device group – Click Next and Add
 

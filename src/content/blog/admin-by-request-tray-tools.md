@@ -17,20 +17,20 @@ But working with the product **[Admin By Request](https://www.adminbyrequest.com
 
 In the latest version of Admin By Request – they have released a smart feature called **Tray Tools**. With Tray Tools we can add a small shortcut menu for Control Panel links, specific apps or web links.
 
-![](/images/posts/admin-by-request-tray-tools/Traytools_vid.webp)
+![Admin By Request Tray Tools settings with Quick Assist and Intranet entries and the Control Panel quick add list](/images/posts/admin-by-request-tray-tools/Traytools_vid.webp)
 
 I have seen a lot of internal developed tools – that deliver a shortcut menu for end-users, with most used apps or intranet.
 
 To manage the Tray tools – Under the sub-setting > Applications > Tray Tools – A quick list of Control panel shortcuts can also be added.
 
-![](/images/posts/admin-by-request-tray-tools/Screenshot-2021-08-28-at-22.22.39-1024x738.png)
+![Admin By Request pre-approved application list with quickassist.exe set to forced elevation without UAC](/images/posts/admin-by-request-tray-tools/Screenshot-2021-08-28-at-22.22.39-1024x738.png)
 
 ---
 
 In this scenario, I have added **Quick Assist**, so the end-user easily can find it. Besides add it to the tray tools – I have also added Quick Assist to be **pre-approved** elevation without UAC. That will also make sure Secure Desktop can be seen by the IT Supporter through Quick Assist.
 
-![](/images/posts/admin-by-request-tray-tools/preapproved-1024x428.png)
+![Diagram of two rockets for Phase 1 Hybrid Azure AD-joined and Phase 2 Azure AD-joined devices heading to Microsoft Intune](/images/posts/admin-by-request-tray-tools/preapproved-1024x428.png)
 
 ---
 
-#### Do you want to test it in your own setup – [Sign up for FREE Plan with limit of 25 endpoint](https://www.adminbyrequest.com/FreePlanDownload)
+## Do you want to test it in your own setup – [Sign up for FREE Plan with limit of 25 endpoint](https://www.adminbyrequest.com/FreePlanDownload)

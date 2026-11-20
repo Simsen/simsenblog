@@ -25,7 +25,7 @@ License manager / IT Admin
 Go to https://admin.microsoft.com/ > Licenses > Windows 365 Business plan  
 Assign licenses for specific user.
 
-![](/images/posts/windows-365-business-in-3-steps/Assign_W365license-1024x652.png)
+![Microsoft 365 admin centre Windows 365 Business licence page with the Assign licenses button highlighted](/images/posts/windows-365-business-in-3-steps/Assign_W365license-1024x652.png)
 
 ---
 

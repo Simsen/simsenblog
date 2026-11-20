@@ -30,10 +30,10 @@ In Endpoint Manager the policy is under Administrative Templates:
 
 Normal startup
 
-![](/images/posts/boost-microsoft-edge-startup/Edge_slow.webp)
+![Windows desktop recording of Microsoft Edge starting slowly with the default startup behaviour](/images/posts/boost-microsoft-edge-startup/Edge_slow.webp)
 
 After policy is applied:
 
-![](/images/posts/boost-microsoft-edge-startup/Edge_fast.webp)
+![Windows desktop recording of Microsoft Edge opening quickly after the startup boost policy is applied](/images/posts/boost-microsoft-edge-startup/Edge_fast.webp)
 
 When set this policy – Microsoft Edge will run in the background.

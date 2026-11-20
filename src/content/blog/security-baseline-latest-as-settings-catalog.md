@@ -37,37 +37,37 @@ Current baselines is in the MST package for Windows client, M365 Apps and Edge:
 
 Here I have now imported all Windows 11, Edge and Microsoft 365 policies to Group Policy Analytics:
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/Intune_Policies-1024x663.png)
+![Intune Group Policy analytics listing imported Windows 11, Edge and Microsoft 365 Apps baseline GPOs with MDM support percentages](/images/posts/security-baseline-latest-as-settings-catalog/Intune_Policies-1024x663.png)
 
 Now select the Group Policy and Click **Migrate**
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/Migrate_policy.png)
+![Group Policy analytics with the Edge Version 112 GPO ticked and the Migrate button highlighted](/images/posts/security-baseline-latest-as-settings-catalog/Migrate_policy.png)
 
 Click **Select all** on this page.  
 **OBS:** Remember if there is multiple pages – you have to Click Next (up-right-corner) and again Select all on this page. Until you have them all.
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/Click_SelectAll-1024x861.png)
+![Settings to migrate step with 'Select all on this page', the page selector and Next highlighted](/images/posts/security-baseline-latest-as-settings-catalog/Click_SelectAll-1024x861.png)
 
 Click Next
 
 Now you get an overview
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/overview_edge.png)
+![Configuration step listing the selected Edge baseline settings and their values before creating the Settings catalog profile](/images/posts/security-baseline-latest-as-settings-catalog/overview_edge.png)
 
 Set name for the policy
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/name_policy.png)
+![Profile info step with the new policy named 'MSFT - Edge baseline'](/images/posts/security-baseline-latest-as-settings-catalog/name_policy.png)
 
 Click Next
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/scopetag.png)
+![Scope tags step of the migration wizard with the Default scope tag](/images/posts/security-baseline-latest-as-settings-catalog/scopetag.png)
 
 Set assignment if needed – else Click Next
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/assignment.png)
+![Assignments step of the migration wizard with no included or excluded groups selected](/images/posts/security-baseline-latest-as-settings-catalog/assignment.png)
 
 Click Deploy
 
-![](/images/posts/security-baseline-latest-as-settings-catalog/review.png)
+![Review + deploy step summarising the MSFT - Edge baseline settings with the Deploy button](/images/posts/security-baseline-latest-as-settings-catalog/review.png)
 
 Now you have a full setting catalog policy with latest Edge baseline.

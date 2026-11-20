@@ -18,15 +18,15 @@ The request feature in Admin by Reqeust will “win” over AppLocker to actuall
 
 But it can be hard to give back some of this flexibility and still audit this in a smart process.
 
-### I have made a demo video – with 5 common scenarios.
+## I have made a demo video – with 5 common scenarios.
 
 My AppLocker policy for the demo – very simple.
 
-![](/images/posts/admin-by-request-and-ms-applocker/applocker.png)
+![AppLocker rules allowing Microsoft-signed apps, Program Files and Windows folders, but denying NOTEPAD.EXE for Everyone](/images/posts/admin-by-request-and-ms-applocker/applocker.png)
 
 In Admin by Request I have activated, so users can do Run As Admin, but need approval.
 
-![](/images/posts/admin-by-request-and-ms-applocker/applocker2.png)
+![Admin By Request Run As Administrator settings with Allow Run As Admin and Require approval both switched on](/images/posts/admin-by-request-and-ms-applocker/applocker2.png)
 
 PC 1
 

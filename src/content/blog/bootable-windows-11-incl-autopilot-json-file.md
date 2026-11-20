@@ -50,7 +50,7 @@ Foreach ($AutopilotProfile in $AutopilotProfiles) {
 
 Following Autopilot profiles is now downloaded as JSON:
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.07.24.png)
+![Explorer folder C:\DATA\AutopilotProfiles with the SelfDeploying and UserDriven Autopilot JSON files downloaded](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.07.24.png)
 
 Rename the file you will use to: **AutopilotConfigurationFile.json**  
 Save the file for later use in this guide.
@@ -67,7 +67,7 @@ Point to the Install.WIM file under **%ISOIMAGE%\\Sources\\Install.wim**
 Dism /get-wiminfo /wimfile:"E:\sources\install.wim"
 ```
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.16.35.png)
+![DISM get-wiminfo output listing Windows 11 editions, with Index 6 Windows 11 Pro highlighted](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.16.35.png)
 
 To export Index : 6 – run following DISM command
 
@@ -77,7 +77,7 @@ Dism /export-image /SourceImageFile:"E:\sources\install.wim" /SourceIndex:6 /Des
 
 Image should now be 500mb smaller – you can run get-wiminfo command again on the new WIM file to verify index.
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.25.16-1024x323.png)
+![DISM get-wiminfo on the exported install.wim showing a single Index 1, Windows 11 Pro](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.25.16-1024x323.png)
 
 The new WIM file need to be mounted – so we can inject the JSON file.  
 Run this command to mount the WIM:
@@ -89,7 +89,7 @@ Dism /mount-wim /wimfile:"C:\DATA\WIM\install.wim" /index:1 /mountdir:C:\DATA\Mo
 After WIM is mounted – Copy **AutopilotConfigurationFile.jso**n to:  
 **%MountDir%\\Windows\\Provisioning\\Autopilot\\**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.34.10-1024x281.png)
+![AutopilotConfigurationFile.json copied to C:\DATA\Mount\Windows\Provisioning\Autopilot in the mounted image](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-15.34.10-1024x281.png)
 
 ---
 
@@ -121,50 +121,50 @@ Insert USB.
 
 Open Command prompt as Administrator
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image.png)
+![Administrator Command Prompt open at C:\WINDOWS\system32](/images/posts/bootable-windows-11-incl-autopilot-json-file/image.png)
 
 Type: **Diskpart**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-1.png)
+![Administrator Command Prompt after running diskpart, showing the DISKPART prompt](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-1.png)
 
 Type: **List disk**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-2.png)
+![Diskpart list disk output showing Disk 0 at 238 GB and the 29 GB USB stick as Disk 1](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-2.png)
 
 Select Disk 1 – which is the USB stick  
 Type: **sel disk 1**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-4.png)
+![Diskpart sel disk 1 confirming 'Disk 1 is now the selected disk'](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-4.png)
 
 Type: **clean**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-3.png)
+![Diskpart clean confirming 'DiskPart succeeded in cleaning the disk'](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-3.png)
 
 Create new partition  
 Type: **create part pri**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-5.png)
+![Diskpart create part pri confirming the new partition was created](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-5.png)
 
 Select new partition  
 Type: **sel part 1**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-6.png)
+![Diskpart sel part 1 confirming 'Partition 1 is now the selected partition'](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-6.png)
 
 Format the USB stick  
 Type: **format fs=fat32 quick**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-7.png)
+![Diskpart format fs=fat32 quick completing 100 percent and formatting the volume](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-7.png)
 
 Type: **active**
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-8.png)
+![Diskpart active confirming the current partition was marked as active](/images/posts/bootable-windows-11-incl-autopilot-json-file/image-8.png)
 
 ---
 
 Copy all files from downloaded Windows 11 ISO to USB  
 Except Install.wim – Instead **Install.SWM** and **Install2.SWM**  
 
-![](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-16.39.47.png)
+![Windows 11 setup files on the USB stick with the split install.SWM and install2.SWM files highlighted](/images/posts/bootable-windows-11-incl-autopilot-json-file/Screenshot-2022-02-06-at-16.39.47.png)
 
 ---
 

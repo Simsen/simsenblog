@@ -23,7 +23,7 @@ However, the world of digital technology never stands still. When mobile devices
 
 Although SCCM remains a strong solution, this evolving scenario introduced new challenges that SCCM wasn’t originally designed to handle. It was like trying to navigate a winding mountain road with a sturdy but inflexible vehicle. It’s not about the strength of the vehicle, but the changing nature of the terrain. SCCM, as powerful as it is, began to hit some roadblocks in this new landscape, highlighting the need for more adaptable endpoint management strategies.
 
-![](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_intro-2-1024x107.png)
+![Section divider showing a timeline ruler from SMS to SCCM to Intune](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_intro-2-1024x107.png)
 
 ## Understanding the ‘Future Endpoint’
 
@@ -43,7 +43,7 @@ Moreover, SCCM was designed mainly for managing Windows-based systems. As the wo
 
 Last but not least, the rise of remote working presented significant challenges for SCCM. Its architecture, heavily reliant on on-premise infrastructure, struggled to manage devices outside the organization’s network. This underscored the need for a more modern, flexible approach to endpoint management.
 
-![](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_understnad-1024x107.png)
+![Section divider with arcade ghosts beside Windows, Apple and Android logos on a timeline ruler](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_understnad-1024x107.png)
 
 ## Advantages of Modern Management Tools
 
@@ -63,4 +63,4 @@ In modern endpoint management, compliance and conditional access are of paramoun
 
 With the increasing sophistication of cyber threats, relying on static rules is insufficient. We need dynamic, context-based security. Microsoft Intune and Azure AD offer superior solutions in these aspects. They provide comprehensive compliance policies, real-time monitoring, automatic remediation actions, and granular control over access, ensuring robust, flexible solutions that are integral to managing and securing future endpoints. In my view, they’re a valuable investment for any organization aiming to stay ahead in the digital era.
 
-![](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_compliance-2-1024x107.png)
+![Section divider with a security guard at a barrier gating Windows, Apple and Android devices from business resources](/images/posts/future-client-zero-trust/mellemlogo_FutureEndpoint_compliance-2-1024x107.png)

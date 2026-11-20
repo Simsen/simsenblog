@@ -31,7 +31,7 @@ As our workplaces become a network of diverse devices and remote teams, Intuneâ€
 
 The journey of transitioning management from SCCM to Intune typically unfolds in two distinct phases. Each phase involves specific considerations and action points to ensure a smooth and efficient transition.
 
-![](/images/posts/future-client-zero-trust-pt2/Rocket_ModernWorld-1-1024x267.png)
+![Animation of the Admin By Request tray icon menu opening to show the Tray Tools shortcuts](/images/posts/future-client-zero-trust-pt2/Rocket_ModernWorld-1-1024x267.png)
 
 ### Phase 1: Managing Existing PCs (Hybrid Joined Devices)
 

@@ -23,7 +23,7 @@ This year, there was a lot to take away. Apple is clearly moving Mac management 
 
 For me, the interesting part is not just that Apple announced new features. It is that several of them address real problems we meet in customer environments: how to control what can run, how to handle privacy prompts, how to improve login security, how to manage credentials better, and how to get more reliable device status.
 
-![](/images/posts/wwdc26-news-on-mac-management/image-1.png)
+![AI-generated overview of WWDC26 Apple device management news, including DDM, Platform SSO and binary execution control](/images/posts/wwdc26-news-on-mac-management/image-1.png)
 *Picture is AI generated*
 
 ## Let’s walk through the highlights.

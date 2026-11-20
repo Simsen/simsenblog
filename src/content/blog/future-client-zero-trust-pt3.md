@@ -19,7 +19,7 @@ Now, as we venture into Part 3, we turn our focus to a concept that embodies the
 
 In the fast-evolving digital landscape, Evergreen IT is more than just a choice, it’s an imperative. It ensures our systems are secure, compatible, innovative, cost-efficient, and regulatory-compliant. In this part, we will delve into the world of Evergreen IT, exploring its importance in a modern management setup, and how tools like Intune and Defender for Endpoint facilitate this approach. So, let’s dive in and discover the true potential of a constantly refreshed and updated IT landscape.
 
-![](/images/posts/future-client-zero-trust-pt3/mellem_high_bridge-1024x267.png)
+![Banner photo of a cable-stayed bridge rising above the clouds, illustrating Evergreen IT](/images/posts/future-client-zero-trust-pt3/mellem_high_bridge-1024x267.png)
 
 ## The Pillars of Evergreen IT
 
@@ -49,7 +49,7 @@ One particular challenge that stands out was when an update caused compatibility
 
 Transitioning to Evergreen IT is not a one-off project, but rather a journey of continuous learning and adaptation. It’s been a challenging yet rewarding endeavor, and it’s changed the way I view IT management: as an ever-evolving landscape rather than a static field.
 
-![](/images/posts/future-client-zero-trust-pt3/Evergreen_Wheel.gif)
+![Evergreen IT wheel cycling through Manage, Upgrade and Repeat around pillars such as automation and ring deployments](/images/posts/future-client-zero-trust-pt3/Evergreen_Wheel.gif)
 
 ## The Role of Modern Management Tools – facilitate an Evergreen IT approach.
 

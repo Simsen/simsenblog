@@ -52,7 +52,20 @@ export default defineConfig({
     },
   },
   markdown: {
-    shikiConfig: { theme: 'github-dark-dimmed' },
+    shikiConfig: {
+      theme: 'github-dark-dimmed',
+      // The theme's comment grey (#768390) is 3.9:1 on the code background; WCAG AA needs 4.5:1.
+      // A slightly lighter grey (5.1:1) keeps the same look.
+      transformers: [
+        {
+          name: 'accessible-comments',
+          span(node) {
+            const style = node.properties?.style;
+            if (typeof style === 'string' && /#768390/i.test(style)) node.properties.style = style.replace(/#768390/gi, '#8B98A5');
+          },
+        },
+      ],
+    },
   },
   vite: {
     plugins: [tailwindcss()],
