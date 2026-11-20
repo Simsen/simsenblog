@@ -28,7 +28,7 @@ export const SOCIALS = [
  */
 export const CONTACT = {
   formspreeId: '',
-  web3formsKey: '',
+  web3formsKey: '241f6d8c-6876-4dac-a701-66625831d4c7',
 };
 
 /** Topic filters on the homepage. Add one here and it appears as a filter button. */

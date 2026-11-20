@@ -109,11 +109,11 @@ const endpoint = CONTACT.formspreeId
     sendBtn.disabled = true;
     say('Sending…');
     try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      // Sent as ordinary form data (not JSON): a plain form post needs no CORS preflight,
+      // which form services' bot protection can block.
+      const body = new FormData();
+      for (const [k, v] of Object.entries(payload)) body.append(k, v);
+      const res = await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body });
       if (!res.ok) throw new Error(String(res.status));
       form.reset(); newSum();
       say("Thanks! Your message is on its way. I'll get back to you.", 'ok');
