@@ -28,8 +28,6 @@ export interface Tool {
 const ALL_TOOLS: Tool[] = [
   {
     id: 'intunescope',
-    // Not announced yet: hidden from the Tools page and the sidebar. Remove this line to publish it.
-    hidden: true,
     name: 'IntuneScope',
     suffix: '.app',
     icon: '◎',
