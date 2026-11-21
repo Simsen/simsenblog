@@ -488,6 +488,9 @@
   .article-body .layout-table td { border: 0; padding: 0 16px 0 0; vertical-align: top; }
   .article-body .layout-table img { max-width: 260px; margin: 0; }
   /* Lightbox (scripts/lightbox.ts) */
+  .about-privacy { margin-top: 28px; font-size: 13px; color: var(--muted); }
+  .about-privacy h2 { font-size: 15px; margin-bottom: 6px; color: var(--text); }
+  .about-privacy a { text-decoration: underline; }
   .article-body img.zoomable, .gallery-stage img { cursor: zoom-in; }
   .article-body img.zoomable:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
   html.lightbox-open { overflow: hidden; }

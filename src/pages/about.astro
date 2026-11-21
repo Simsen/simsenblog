@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar.astro';
 import ShipGame from '../components/ShipGame.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { SITE } from '../lib/site';
+import { ANALYTICS, SITE } from '../lib/site';
 
 // Content from https://www.simsenblog.dk/about/ (draft for the new site).
 const stats = [
@@ -152,6 +152,16 @@ const years = [...new Set(talks.map((t) => t.year))];
         </div>
         <ContactForm />
       </section>
+      {ANALYTICS.cloudflareToken && (
+        <section class="about-privacy" id="privacy" aria-labelledby="privacy-heading">
+          <h2 id="privacy-heading">Privacy</h2>
+          <p>
+            This site counts page views with <a href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</a>.
+            It sets no cookies, doesn't track you across sites and doesn't store your IP address. I only see totals: which
+            posts are read, from which countries, and which sites link here.
+          </p>
+        </section>
+      )}
     </div>
     <Sidebar show="posts" />
   </div>

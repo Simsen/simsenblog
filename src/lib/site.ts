@@ -31,6 +31,16 @@ export const CONTACT = {
   web3formsKey: '241f6d8c-6876-4dac-a701-66625831d4c7',
 };
 
+/**
+ * Visitor statistics with Cloudflare Web Analytics: cookieless, no personal data, no consent banner.
+ * Cloudflare dashboard → Analytics & Logs → Web Analytics → Add a site → simsenblog.dk → copy the
+ * token from the snippet (data-cf-beacon='{"token": "<TOKEN>"}'). The token is meant to be public.
+ * Leave empty and no analytics script is loaded.
+ */
+export const ANALYTICS = {
+  cloudflareToken: 'ab56c996aebe438e9d785d71132b900b',
+};
+
 /** Topic filters on the homepage. Add one here and it appears as a filter button. */
 export const CATEGORIES = ['Intune', 'Windows', 'macOS', 'Tools'] as const;
 export type Category = (typeof CATEGORIES)[number];
