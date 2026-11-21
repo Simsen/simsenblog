@@ -39,7 +39,8 @@ export default defineConfig({
         "img-src 'self' data:",
         "media-src 'self'",
         "font-src 'self'",
-        "connect-src 'self' https://formspree.io https://api.web3forms.com",
+        // cloudflareinsights.com receives the Cloudflare Web Analytics beacon (see ANALYTICS in src/lib/site.ts).
+        "connect-src 'self' https://formspree.io https://api.web3forms.com https://cloudflareinsights.com",
         "form-action 'self' https://formspree.io https://api.web3forms.com",
         "frame-src 'none'",
         "object-src 'none'",
@@ -48,7 +49,8 @@ export default defineConfig({
       ],
       styleDirective: { resources: ["'self'", "'unsafe-inline'"] },
       // Full-text search (Pagefind) runs as WebAssembly. 'wasm-unsafe-eval' allows that and nothing else.
-      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'"] },
+      // static.cloudflareinsights.com serves the Cloudflare Web Analytics script.
+      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'", 'https://static.cloudflareinsights.com'] },
     },
   },
   markdown: {
