@@ -38,7 +38,7 @@ const ALL_TOOLS: Tool[] = [
       'Intune shows assignments one policy at a time, but the question is usually the reverse: what does this group actually get, and where is this filter used? IntuneScope loads every policy, app and script with its assignments and answers that in seconds, straight from your browser.',
     features: [
       'Browse every policy, app and script with its targets, assignment filters and filter mode, across all platforms',
-      'Group lookup: pick an Entra group and see everything that includes or excludes it',
+      'Group lookup: pick an Entra group and see everything that includes or excludes it, including what it inherits through parent groups',
       'Filter lookup: see everything that uses an assignment filter, in include or exclude mode',
       'Export to Excel or CSV, one row per assignment',
       'Editor mode bulk-changes assignments with preview, JSON backup, compare-and-skip and verify',

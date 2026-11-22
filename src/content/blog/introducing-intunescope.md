@@ -61,7 +61,7 @@ A free, open-source web app that loads every policy, app and script in your tena
 ## What IntuneScope does
 
 -   **Policies:** browse every object with its targets, assignment filters and filter mode, across all platforms.
--   **Group lookup:** pick an Entra group and see every policy, app, script and remediation that includes or excludes it.
+-   **Group lookup:** pick an Entra group and see every policy, app, script and remediation that includes or excludes it, including what it inherits through **parent groups** (nested membership, any depth), marked *via <parent>*.
 -   **Filter lookup:** pick an assignment filter and see everything that uses it, in include or exclude mode.
 -   **Export:** Excel (with an *About* sheet) or CSV, one row per assignment.
 -   **Bulk edit (Editor):** add, replace or remove assignments, or change filters, across many policies.
@@ -81,10 +81,12 @@ No install, no PowerShell, no backend.
 
 IntuneScope has two modes, and each one has its own app registration:
 
--   **Explorer** is read-only. It uses delegated `Read.All` permissions for configuration, apps and scripts, plus `Group.ReadBasic.All` and `User.Read`.
+-   **Explorer** is read-only. It uses delegated `Read.All` permissions for configuration, apps and scripts, plus `Group.ReadBasic.All`, `GroupMember.Read.All` (to find the groups a group is nested in) and `User.Read`.
 -   **Editor** adds write permission for **assignments** of Settings Catalog, Endpoint Security, Device configuration and Compliance policies. It never changes policy settings, apps or scripts.
 
 Because they are separate apps, a tenant can approve Explorer without ever granting write access, and can lock Editor down further with *assignment required* and Conditional Access.
+
+<div class="note"><strong>Update, 22 November 2026 (v0.1.9)</strong>Group lookup now includes nested groups, which needs one more read-only permission, <code>GroupMember.Read.All</code>, in both Explorer and Editor. If your tenant already approved IntuneScope, add the permission to your app registrations (self-hosted) or run the admin consent again. Until then, users get a consent prompt at their next sign-in.</div>
 
 Both use delegated permissions, so they never exceed the signed-in user's own rights: **Intune RBAC and scope tags still apply.** If your role can't see an object, IntuneScope can't either, and every lookup says which workloads were and weren't searched.
 
@@ -108,7 +110,7 @@ Data is held in memory only: close or refresh the tab and it's gone. There's no 
 
 ## Limits, by design
 
--   **Direct references only.** A group nested inside an assigned group isn't resolved.
+-   **Nested groups go upwards only.** Group lookup adds what a group inherits from its parent groups, but doesn't expand the groups nested inside it.
 -   **Not device-level.** IntuneScope shows what targets a group or filter, not what one specific device ends up receiving.
 -   **Scope tags reduce what Graph returns.** Results are labelled accordingly, so "nothing found" reads as *No references found in the workloads you can see*.
 
