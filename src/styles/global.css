@@ -517,7 +517,7 @@
   .article-body hr { border: 0; border-top: 1px solid var(--border); margin: 32px 0; }
 
   .project-banner { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 28px; display: flex; align-items: center; gap: 24px; margin-bottom: 30px; }
-  .project-mark { width: 66px; height: 66px; flex: 0 0 66px; display: grid; place-items: center; font: 36px monospace; color: var(--light); border: 1px solid #34466c; border-radius: 12px; background: #1a2540; }
+  .project-mark { width: 66px; height: 66px; flex: 0 0 66px; display: grid; place-items: center; font: 36px monospace; letter-spacing: -0.12em; white-space: nowrap; color: var(--light); border: 1px solid #34466c; border-radius: 12px; background: #1a2540; }
   .project-banner strong { font-size: 24px; letter-spacing: -.6px; color: var(--text); }
   .project-banner strong span { color: var(--muted); }
   .project-banner small { display: block; font-size: 11px; letter-spacing: 1.7px; color: var(--muted); margin-top: 3px; text-transform: uppercase; }
