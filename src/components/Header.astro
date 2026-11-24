@@ -22,7 +22,63 @@ const links = [
   <nav aria-label="Main navigation">
     {links.map((l) => <a class={active === l.id ? 'active' : undefined} href={l.href} aria-current={active === l.id ? 'page' : undefined}>{l.label}</a>)}
   </nav>
-  <a class="github" href={SITE.github}>
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"></path></svg>GitHub
-  </a>
+  <div class="nav-tools">
+    <button class="nav-search-toggle" type="button" aria-label="Search articles" aria-expanded="false" aria-controls="navSearch" title="Search ( / )">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    </button>
+    <a class="github" href={SITE.github}>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.71.11 2.51.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.85-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"></path></svg><span class="github-label">GitHub</span>
+    </a>
+  </div>
+  <!-- Search on every page. On the homepage it filters the post list as you type; elsewhere Enter goes to /?q=… -->
+  <form class="nav-search" id="navSearch" action="/" method="get" role="search" hidden>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    <input type="search" name="q" id="search" aria-label="Search articles" placeholder="Search articles…" autocomplete="off" />
+    <kbd aria-hidden="true">Esc</kbd>
+  </form>
 </header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-search-toggle')!;
+  const form = document.querySelector<HTMLFormElement>('#navSearch')!;
+  const input = form.querySelector<HTMLInputElement>('input')!;
+  const onHome = location.pathname === '/';
+
+  function open() {
+    form.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function close() {
+    form.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    if (input.value) {
+      input.value = '';
+      input.dispatchEvent(new Event('input')); // homepage: show all posts again
+    }
+    toggle.focus();
+  }
+
+  toggle.addEventListener('click', () => (form.hidden ? open() : close()));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+  // "/" opens search from anywhere, unless you're typing in a field.
+  document.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement;
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || t.closest('input, textarea, select, [contenteditable]')) return;
+    e.preventDefault();
+    open();
+  });
+  // On the homepage the list filters live, so Enter just jumps to the results.
+  form.addEventListener('submit', (e) => {
+    if (!onHome) return;
+    e.preventDefault();
+    document.querySelector('#articles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  // Arriving on /?q=… (from another page or the 404 page): keep the search bar open with the query in it.
+  if (onHome && new URLSearchParams(location.search).get('q')) {
+    form.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+</script>

@@ -61,6 +61,27 @@
   .nav nav { display: flex; gap: 52px; font-size: 16px; font-weight: 500; color: var(--muted); }
   .nav nav .active { color: var(--text); }
   .github { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: var(--muted); }
+  /* Wraps so the search bar can open as its own row; the first row keeps the 85px height. */
+  .nav { flex-wrap: wrap; row-gap: 0; }
+  .brand { display: flex; align-items: center; min-height: 85px; }
+  .nav-tools { display: flex; align-items: center; gap: 18px; }
+  .nav-search-toggle { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; background: none; border: 1px solid transparent; border-radius: 8px; color: var(--muted); cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
+  .nav-search-toggle:hover, .nav-search-toggle[aria-expanded="true"] { color: var(--light); border-color: var(--border); background: var(--panel); }
+  .nav-search-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  /* Search bar: its own full-width row under the header when open. */
+  .nav-search { order: 4; width: 100%; display: flex; align-items: center; gap: 10px; margin: 0 0 16px; padding: 10px 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; color: var(--muted); }
+  .nav-search[hidden] { display: none; }
+  .nav-search:focus-within { border-color: var(--blue); }
+  .nav-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--text); font: inherit; font-size: 15px; }
+  .nav-search kbd { font: 10px/1 inherit; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); }
+  @media (max-width: 760px) { .brand { min-height: 0; } .nav-search { margin: 0; } }
+  @media (max-width: 620px) {
+    .nav-search kbd { display: none; }
+    .nav-tools { gap: 6px; }
+    .nav-search-toggle { width: 34px; height: 34px; }
+  }
+  /* Smallest phones: GitHub as an icon only, so logo + search + GitHub stay on one row. */
+  @media (max-width: 400px) { .github-label { display: none; } }
   @media (max-width: 1000px) { .nav nav { gap: 32px; } }
   @media (max-width: 800px) { .nav nav { gap: 22px; } }
   @media (max-width: 380px) { .nav nav { font-size: 15px; } .nav { gap: 10px; } }
@@ -109,11 +130,6 @@
   .filter { background: none; border: 1px solid transparent; border-radius: 7px; color: var(--muted); padding: 6px 13px; font-size: 16px; font-weight: 500; }
   .filter[aria-pressed="true"] { background: #202c49; border-color: #334568; color: #b2c7ff; }
   .filter:hover { background: var(--panel); color: var(--text); }
-  .search { display: flex; align-items: center; gap: 9px; border: 1px solid var(--border); border-radius: 6px; padding: 6px 11px; color: var(--muted); max-width: 225px; }
-  .search input { min-width: 0; width: 100%; border: 0; outline: 0; background: none; color: var(--text); font-size: 11px; }
-  /* In the sidebar (desktop): full card width, matching the cards below it. */
-  .home-sidebar .side-search { max-width: none; background: var(--panel); border-radius: 10px; padding: 10px 14px; }
-  .home-sidebar .side-search input { font-size: 13px; }
   .show-more { display: flex; width: 100%; justify-content: center; margin-top: 18px; padding: 13px 17px; font-size: 13px; color: var(--light); cursor: pointer; transition: border-color .15s, color .15s; }
   .show-more:hover { border-color: #455d95; color: var(--text); }
   .show-more[hidden] { display: none; }
@@ -131,7 +147,6 @@
   .result-status { font-size: 10px; color: var(--muted); }
   @media (max-width: 620px) {
     .toolbar { align-items: stretch; flex-direction: column; }
-    .search { max-width: none; }
     .filters { gap: 2px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -24px; padding: 0 24px; }
     .filters::-webkit-scrollbar { display: none; }
     .filter { flex: 0 0 auto; white-space: nowrap; }
