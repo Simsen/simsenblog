@@ -33,10 +33,6 @@ const posts = await getPosts();
         <button class="filter" aria-pressed="true" data-category="all">All posts</button>
         {CATEGORIES.map((c) => <button class="filter" aria-pressed="false" data-category={c.toLowerCase()}>{c}</button>)}
       </div>
-      <label class="search">
-        <span aria-hidden="true">⌕</span>
-        <input type="search" id="search" aria-label="Search articles" placeholder="Search articles…" />
-      </label>
     </div>
     <div class="interactive-posts">
       {posts.map((post, i) => <PostRow post={post} index={i} />)}
@@ -49,7 +45,13 @@ const posts = await getPosts();
     <p class="empty" id="empty" hidden>No articles match. Try another topic or search.</p>
     <span class="result-status" id="resultStatus" role="status"></span>
   </section>
-  <Sidebar show="tools" hideAuthorOnMobile />
+  <Sidebar show="tools" hideAuthorOnMobile>
+    <!-- Desktop: in the sidebar, between the social links and the tools card. Below 900px the script moves it back above the post list. -->
+    <label class="search side-search" slot="search">
+      <span aria-hidden="true">⌕</span>
+      <input type="search" id="search" aria-label="Search articles" placeholder="Search articles…" />
+    </label>
+  </Sidebar>
   </div>
 </BaseLayout>
 
@@ -58,6 +60,17 @@ const posts = await getPosts();
   const filters = [...document.querySelectorAll<HTMLButtonElement>('.filter')];
   const search = document.querySelector<HTMLInputElement>('#search')!;
   const cards = [...document.querySelectorAll<HTMLElement>('.expanding-post')];
+
+  // The search box sits between the social links and the tools card in the sidebar; on narrow screens the sidebar drops below
+  // the posts, so move the box up into the toolbar there.
+  const searchBox = search.closest('label')!;
+  const sidebar = document.querySelector('.home-sidebar')!;
+  const sidebarSpot = searchBox.nextElementSibling; // the card it sits above in the sidebar
+  const toolbar = document.querySelector('.toolbar')!;
+  const narrow = matchMedia('(max-width: 900px)');
+  const placeSearch = () => (narrow.matches ? toolbar.append(searchBox) : sidebar.insertBefore(searchBox, sidebarSpot));
+  placeSearch();
+  narrow.addEventListener('change', placeSearch);
   const empty = document.querySelector<HTMLElement>('#empty')!;
   const status = document.querySelector<HTMLElement>('#resultStatus')!;
   const showMore = document.querySelector<HTMLButtonElement>('#showMore')!;

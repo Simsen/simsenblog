@@ -35,6 +35,8 @@ const latest = show === 'posts' ? (await getPosts()).slice(0, 4) : [];
     <SocialLinks />
   </section>
 
+  <slot name="search" />
+
   {
     show === 'tools' ? (
       <section class="side-card">
