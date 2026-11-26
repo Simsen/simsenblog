@@ -316,8 +316,6 @@
   }
 
   /* ---------- Courses page ---------- */
-  .page-layout .course-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .course-index a { flex-direction: row; align-items: center; }
   .course-subhead { font-size: 10px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 3px 0 10px; }
   .course-quote { margin: 20px 0 0; padding: 14px 16px; border-left: 3px solid var(--blue); background: #171f32; border-radius: 0 8px 8px 0; }
   .course-quote p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text); font-style: italic; }
@@ -351,8 +349,7 @@
   @media (max-width: 1100px) { .link-grid { grid-template-columns: 1fr; } }
   @media (max-width: 900px) { .link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 620px) {
-    .link-grid, .course-facts, .page-layout .course-index { grid-template-columns: 1fr; }
-    .course-index small { display: block; }
+    .link-grid, .course-facts { grid-template-columns: 1fr; }
   }
 
   /* ---------- 404 page ---------- */
